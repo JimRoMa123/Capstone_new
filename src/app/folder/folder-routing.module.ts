@@ -7,6 +7,14 @@ const routes: Routes = [
   {
     path: '',
     component: FolderPage
+  },
+  {
+    path: 'proveedores',
+    loadChildren: () => import('./proveedores/proveedores.module').then( m => m.ProveedoresPageModule)
+  },
+  {
+    path: 'listar-proveedores',
+    loadChildren: () => import('./listar-proveedores/listar-proveedores.module').then( m => m.ListarProveedoresPageModule)
   }
 ];
 

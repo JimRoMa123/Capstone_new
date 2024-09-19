@@ -1,0 +1,32 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Lista Proveedores</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen]="true">
+  <ion-list *ngIf="proovedores.length > 0; else noProveedores">
+    <ion-item *ngFor="let proovedor of proovedores">
+      <ion-label>
+        <h2>{{ proovedor.nombre }}</h2>
+        <p>Dirección: {{ proovedor.direccion }}</p>
+        <p>Teléfono: {{ proovedor.telefono }}</p>
+        <p>Email: {{ proovedor.email }}</p>
+        <p>Alias: {{ proovedor.alias }}</p>
+        <p>Tipo de pago: {{proovedor.pago}}</p>
+      </ion-label>
+      <ion-button (click)="enviarCorreo(proovedor)">Enviar Correo</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <!-- Mostrar mensaje cuando no hay proveedores -->
+  <ng-template #noProveedores>
+    <div class="ion-text-center">
+      <p>No hay proveedores creados.</p>
+    </div>
+  </ng-template>
+</ion-content>
