@@ -1,0 +1,31 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Pedidos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  
+
+  <ion-list>
+    <ion-item *ngFor="let orden of ordenes">
+      <ion-label>
+        <h2>Pedido: {{ orden.orden }}</h2>
+        <p>Proveedor: {{orden.proveedor.nombre}}</p>
+        <p>Email proveedor: {{orden.proveedor.email}}</p>
+        <p>Teléfono: {{ orden.proveedor.telefono }}</p>
+        <p>Estado del pedido: {{ orden.estado }}</p>
+        <p>Fecha del envio: {{orden.fecha}}</p>
+        <p>Cantidad del envio: {{orden.cantidad}}</p>
+      </ion-label>
+
+    
+     
+
+    </ion-item>
+  </ion-list>
+
+</ion-content>

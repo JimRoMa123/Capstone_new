@@ -19,4 +19,13 @@ export class ProovedoresService {
   generarIdUnico(): number {
     return ++this.ultimoId;
   }
+
+  editarProovedor(id: number, datosActualizados: Proovedores): boolean {
+    const index = this.proovedores.findIndex(p => p.id === id);
+    if (index !== -1) {
+      this.proovedores[index] = { ...this.proovedores[index], ...datosActualizados };
+      return true;
+    }
+    return false;
+  }
 }
