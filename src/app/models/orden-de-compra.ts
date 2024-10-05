@@ -5,7 +5,10 @@ export class OrdenDeCompra {
         public id : number,
         public proveedor: Proovedores,
         public orden: string,
-        public estado: string
+        public estado: string,
+        public cantidad: string,
+        public fecha: string,
+        
     ){}
 
 }

@@ -1,5 +1,5 @@
 {
-  "name": "ProyectoCapstone",
+  "name": "proyectocapstone",
   "version": "0.0.1",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
@@ -29,7 +29,10 @@
     "@capacitor/status-bar": "6.0.1",
     "@ionic/angular": "^8.0.0",
     "cordova-plugin-email-composer": "^0.10.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
     "ionicons": "^7.0.0",
+    "pg": "^8.13.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
@@ -62,5 +65,8 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.4.0"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "main": "karma.conf.js",
+  "keywords": [],
+  "license": "ISC"
 }

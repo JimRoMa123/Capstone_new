@@ -6,9 +6,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   public appPages = [
-
+    { title: 'Listar de Proveedores', url: '/folder/listar-proveedores', icon: 'pricetags' },
     { title: 'Proveedores', url: '/folder/proveedores', icon: 'pricetag' },
-    { title: 'ListarProveedores', url: '/folder/listar-proveedores', icon: 'pricetags' },
+    
+    { title: 'Listar ordenes de compra', url: '/folder/listar-ordenes', icon: 'pricetags' },
   ];
   public labels = [''];
   constructor() {}
