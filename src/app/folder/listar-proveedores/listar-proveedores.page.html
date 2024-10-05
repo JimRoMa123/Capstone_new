@@ -35,8 +35,7 @@
               <ion-label>Fecha de Entrega</ion-label>
               <ion-datetime
                 [(ngModel)]="fechaEntrega"
-                displayFormat="DD/MM/YYYY"   
-                pickerFormat="DD/MM/YYYY"    
+                displayFormat="DD/MM/YYYY"
                 placeholder="Seleccionar Fecha">
               </ion-datetime>
             </ion-item>
@@ -49,11 +48,11 @@
             <ion-button expand="block" (click)="enviarCorreo(proovedorSeleccionado); setOpenModalOrden(false)">Enviar</ion-button>
           </div>
         </ion-modal>
-        <div class="editar-proveedor-container">
-          <ion-button expand="block" (click)="seleccionarProovedor(proovedor); setOpenModalEdit(true)">Editar Proveedor</ion-button>
+        <ion-button expand="block" (click)="seleccionarProovedor(proovedor); setOpenModalEdit(true)">Editar Proveedor</ion-button>
       </div>
 
-
+      <div class="editar-proveedor-container">
+        
 
         <ion-modal [isOpen]="isModalEditOpen">
           <div *ngIf="proovedorSeleccionado === proovedor" class="editar-proveedor-formulario">
@@ -101,10 +100,5 @@
       
     </ion-item>
   </ion-list>
-
-
-  <ion-button expand="full" color="primary" [routerLink]="['/folder/proveedores']">
-    Crear un nuevo proveedor
-  </ion-button>
 
 </ion-content>
