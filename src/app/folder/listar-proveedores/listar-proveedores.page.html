@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-
+<!--
   <ion-list>
     <ion-item *ngFor="let proovedor of proovedores">
       <ion-label>
@@ -19,8 +19,6 @@
         <p>Alias: {{ proovedor.alias }}</p>
         <p>Pago: {{ proovedor.pago }}</p>
       </ion-label>
-
-      <!-- Solicitar Pedido -->
       <div class="pedido-container">
         <ion-button expand="block" (click)="seleccionarProovedor(proovedor); setOpenModalOrden(true)">Solicitar Pedido</ion-button>
         
@@ -29,8 +27,7 @@
             <ion-item>
               <ion-label position="stacked">Pedido</ion-label>
               <ion-textarea [(ngModel)]="mensajeCorreo"></ion-textarea>
-            </ion-item>
-            
+            </ion-item>           
             <ion-item>
               <ion-label>Fecha de Entrega</ion-label>
               <ion-datetime
@@ -39,7 +36,6 @@
                 placeholder="Seleccionar Fecha">
               </ion-datetime>
             </ion-item>
-
             <ion-item>
               <ion-label position="floating">Cantidad</ion-label>
               <ion-input [(ngModel)]="cantidad" type="text" name="cantidad" required></ion-input>
@@ -103,4 +99,35 @@
   <ion-button expand="full" color="primary" [routerLink]="['/folder/proveedores']">
     Crear un nuevo proveedor
   </ion-button>
+-->
+
+
+  <!-- Pantalla de carga -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando proveedores...</p>
+  </div>
+  
+  <!-- Lista de proveedores cuando isLoading es false -->
+  <ion-list *ngIf="!isLoading">
+    <ion-item *ngFor="let proveedor of proveedores">
+      <ion-label>
+        <h2>{{ proveedor.nombre }}</h2>
+        <p>Dirección: {{ proveedor.direccion }}</p>
+        <p>Teléfono: {{ proveedor.telefono }}</p>
+        <p>Email: {{ proveedor.email }}</p>
+      </ion-label>
+      <ion-button (click)="enviarCorreo(proveedor)" color="primary">
+        Enviar Correo
+      </ion-button>
+    </ion-item>
+  </ion-list>
+  
+  <!-- Mensaje si no hay proveedores y la carga terminó -->
+  <ion-item *ngIf="!isLoading && proveedores.length === 0">
+    <ion-label>No hay proveedores disponibles.</ion-label>
+  </ion-item>
+
+
+
 </ion-content>
