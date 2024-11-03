@@ -1,33 +1,42 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { ProveedoresPage } from './folder/proveedores/proveedores.page';
-import { ListarOrdenesPage } from './folder/listar-ordenes/listar-ordenes.page';
+import { AuthGuard } from './guard/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'folder/listar-proveedores',  // Redirige a listar proveedores
+    redirectTo: 'folder/listar-clientes', 
     pathMatch: 'full'
   },
-  {path: 'folder/listar-proveedores',
-    loadChildren: () => import('./folder/listar-proveedores/listar-proveedores.module').then(m=>m.ListarProveedoresPageModule)
+  {
+    path: 'folder/listar-clientes',
+    loadChildren: () => import('./folder/listar-clientes/listar-clientes.module').then(m => m.ListarClientesPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'folder/clientes',
+    loadChildren: () => import('./folder/clientes/clientes.module').then(m => m.ClientesPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'folder/listar-proveedores',
+    loadChildren: () => import('./folder/listar-proveedores/listar-proveedores.module').then(m => m.ListarProveedoresPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'folder/proveedores',
-    loadChildren: () => import('./folder/proveedores/proveedores.module').then(m => m.ProveedoresPageModule)
+    loadChildren: () => import('./folder/proveedores/proveedores.module').then(m => m.ProveedoresPageModule),
+    canActivate: [AuthGuard]
   },
-
   {
     path: 'folder/listar-ordenes',
-    loadChildren: () => import('./folder/listar-ordenes/listar-ordenes.module').then( m => m.ListarOrdenesPageModule)
+    loadChildren: () => import('./folder/listar-ordenes/listar-ordenes.module').then(m => m.ListarOrdenesPageModule),
+    canActivate: [AuthGuard]
   },
   {
-    path: 'folder/:id',
-    loadChildren: () => import('./folder/folder.module').then(m => m.FolderPageModule)
+    path: 'login',
+    loadChildren: () => import('./folder/login/login.module').then(m => m.LoginPageModule)
   }
-  
-  
-  
 ];
 
 @NgModule({

@@ -47,13 +47,12 @@ export class ListarProveedoresPage implements OnInit {
     console.log('Modal Edit Open State:', this.isModalEditOpen);
     
     if (!isOpen) {
-      // Limpia los datos del formulario al cerrar el modal
       this.editarProovedor = new Proovedores(0, '', '', '', '', '', '');
     }
   }
   
   onGuardarCambios() {
-    this.guardarCambios(); // Guardar los cambios
+    this.guardarCambios();
     this.setOpenModalEdit(false); // Cerrar el modal después de guardar
   }
   

@@ -1,0 +1,57 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Agregar Cliente</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="addCliente()" #clienteForm="ngForm">
+    <ion-item>
+      <ion-label position="floating">Nombre</ion-label>
+      <ion-input type="text" [(ngModel)]="nombre" name="nombre" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">rut</ion-label>
+      <ion-input type="text" [(ngModel)]="rut" name="rut" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Apellido</ion-label>
+      <ion-input type="text" [(ngModel)]="apellido" name="apellido" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Dirección</ion-label>
+      <ion-input type="text" [(ngModel)]="direccion" name="direccion" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Teléfono</ion-label>
+      <ion-input type="tel" [(ngModel)]="telefono" name="telefono" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input type="email" [(ngModel)]="email" name="email" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Fecha de Nacimiento</ion-label>
+      <ion-datetime [(ngModel)]="fecha_nacimiento" name="fecha_nacimiento" required></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Género</ion-label>
+      <ion-select [(ngModel)]="genero" name="genero" required>
+        <ion-select-option value="M">Masculino</ion-select-option>
+        <ion-select-option value="F">Femenino</ion-select-option>
+        <ion-select-option value="O">Otro</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button expand="full" type="submit" [disabled]="!clienteForm.form.valid">Agregar Cliente</ion-button>
+  </form>
+</ion-content>

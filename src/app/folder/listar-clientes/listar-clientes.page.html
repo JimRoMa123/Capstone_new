@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Lista de clientes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Pantalla de carga -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando clientes...</p>
+  </div>
+
+  <!-- Lista de clientes cuando isLoading es false -->
+  <ion-list *ngIf="!isLoading">
+    <ion-item *ngFor="let cliente of clientes">
+      <ion-label>
+        <h2>{{ cliente.nombre }} {{ cliente.apellido }}</h2>
+        <p>Dirección: {{ cliente.direccion }}</p>
+        <p>Teléfono: {{ cliente.telefono }}</p>
+        <p>Email: {{ cliente.email }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Mensaje si no hay clientes y la carga terminó -->
+  <ion-item *ngIf="!isLoading && clientes.length === 0">
+    <ion-label>No hay clientes disponibles.</ion-label>
+  </ion-item>
+</ion-content>

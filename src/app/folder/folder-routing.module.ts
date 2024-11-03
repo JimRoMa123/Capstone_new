@@ -8,6 +8,7 @@ const routes: Routes = [
     path: '',
     component: FolderPage
   },
+
   {
     path: 'proveedores',
     loadChildren: () => import('./proveedores/proveedores.module').then( m => m.ProveedoresPageModule)
@@ -19,6 +20,18 @@ const routes: Routes = [
   {
     path: 'listar-ordenes',
     loadChildren: () => import('./listar-ordenes/listar-ordenes.module').then( m => m.ListarOrdenesPageModule)
+  },
+  {
+    path: 'clientes',
+    loadChildren: () => import('./clientes/clientes.module').then( m => m.ClientesPageModule)
+  },
+  {
+    path: 'listar-clientes',
+    loadChildren: () => import('./listar-clientes/listar-clientes.module').then( m => m.ListarClientesPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
   }
 ];
 
