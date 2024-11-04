@@ -19,7 +19,8 @@ export class ClientesPage {
   
 
 
-  constructor(private http: HttpClient, private alertController: AlertController) {}
+  constructor(private http: HttpClient,
+     private alertController: AlertController) {}
 
   addCliente() {
     const today = new Date();

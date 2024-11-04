@@ -8,106 +8,11 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-<!--
-  <ion-list>
-    <ion-item *ngFor="let proovedor of proovedores">
-      <ion-label>
-        <h2>{{ proovedor.nombre }}</h2>
-        <p>Dirección: {{ proovedor.direccion }}</p>
-        <p>Teléfono: {{ proovedor.telefono }}</p>
-        <p>Email: {{ proovedor.email }}</p>
-        <p>Alias: {{ proovedor.alias }}</p>
-        <p>Pago: {{ proovedor.pago }}</p>
-      </ion-label>
-      <div class="pedido-container">
-        <ion-button expand="block" (click)="seleccionarProovedor(proovedor); setOpenModalOrden(true)">Solicitar Pedido</ion-button>
-        
-        <ion-modal [isOpen]="isModalOpen">
-          <div *ngIf="proovedorSeleccionado === proovedor" class="pedido-formulario">
-            <ion-item>
-              <ion-label position="stacked">Pedido</ion-label>
-              <ion-textarea [(ngModel)]="mensajeCorreo"></ion-textarea>
-            </ion-item>           
-            <ion-item>
-              <ion-label>Fecha de Entrega</ion-label>
-              <ion-datetime
-                [(ngModel)]="fechaEntrega"
-                displayFormat="DD/MM/YYYY"
-                placeholder="Seleccionar Fecha">
-              </ion-datetime>
-            </ion-item>
-            <ion-item>
-              <ion-label position="floating">Cantidad</ion-label>
-              <ion-input [(ngModel)]="cantidad" type="text" name="cantidad" required></ion-input>
-            </ion-item>
-
-            <ion-button expand="block" (click)="enviarCorreo(proovedorSeleccionado); setOpenModalOrden(false)">Enviar</ion-button>
-          </div>
-        </ion-modal>
-        <ion-button expand="block" (click)="seleccionarProovedor(proovedor); setOpenModalEdit(true)">Editar Proveedor</ion-button>
-      </div>
-
-      <div class="editar-proveedor-container">
-        
-
-        <ion-modal [isOpen]="isModalEditOpen">
-          <div *ngIf="proovedorSeleccionado === proovedor" class="editar-proveedor-formulario">
-            
-            <ion-item>
-              <ion-label position="stacked">Nombre</ion-label>
-              <ion-input [(ngModel)]="editarProovedor.nombre" type="text"></ion-input>
-            </ion-item>
-        
-            <ion-item>
-              <ion-label position="stacked">Dirección</ion-label>
-              <ion-input [(ngModel)]="editarProovedor.direccion" type="text"></ion-input>
-            </ion-item>
-        
-            <ion-item>
-              <ion-label position="stacked">Teléfono</ion-label>
-              <ion-input [(ngModel)]="editarProovedor.telefono" type="text"></ion-input>
-            </ion-item>
-        
-            <ion-item>
-              <ion-label position="stacked">Email</ion-label>
-              <ion-input [(ngModel)]="editarProovedor.email" type="text"></ion-input>
-            </ion-item>
-        
-            <ion-item>
-              <ion-label position="stacked">Alias</ion-label>
-              <ion-input [(ngModel)]="editarProovedor.alias" type="text"></ion-input>
-            </ion-item>
-        
-            <ion-item>
-              <ion-label position="stacked">Pago</ion-label>
-              <ion-input [(ngModel)]="editarProovedor.pago" type="text"></ion-input>
-            </ion-item>
-        
-            <ion-button color="success" expand="block" (click)="onGuardarCambios(); setOpenModalEdit(false)">Guardar Cambios</ion-button>
-
-       
-            <ion-button color ="danger" expand="block" (click)="setOpenModalEdit(false)">
-              Cancelar
-            </ion-button>
-            
-          </div>
-        </ion-modal>
-      </div>
-      
-    </ion-item>
-  </ion-list>
-  <ion-button expand="full" color="primary" [routerLink]="['/folder/proveedores']">
-    Crear un nuevo proveedor
-  </ion-button>
--->
-
-
-  <!-- Pantalla de carga -->
   <div *ngIf="isLoading" class="loading-container">
     <ion-spinner name="crescent"></ion-spinner>
     <p>Cargando proveedores...</p>
   </div>
-  
+
   <!-- Lista de proveedores cuando isLoading es false -->
   <ion-list *ngIf="!isLoading">
     <ion-item *ngFor="let proveedor of proveedores">
@@ -117,17 +22,43 @@
         <p>Teléfono: {{ proveedor.telefono }}</p>
         <p>Email: {{ proveedor.email }}</p>
       </ion-label>
-      <ion-button (click)="enviarCorreo(proveedor)" color="primary">
-        Enviar Correo
+      <ion-button (click)="seleccionarProveedor(proveedor)" color="primary">
+        Hacer pedido
       </ion-button>
     </ion-item>
   </ion-list>
-  
-  <!-- Mensaje si no hay proveedores y la carga terminó -->
-  <ion-item *ngIf="!isLoading && proveedores.length === 0">
-    <ion-label>No hay proveedores disponibles.</ion-label>
-  </ion-item>
 
+  <!-- Modal de Orden de Compra -->
+  <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Orden de Compra</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenModalOrden(false)">Cancelar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-item>
+          <ion-label position="stacked">Pedido</ion-label>
+          <ion-textarea [(ngModel)]="mensajeCorreo"></ion-textarea>
+        </ion-item>
+        <ion-item>
+          <ion-label>Fecha de Entrega</ion-label>
+          <ion-datetime
+            [(ngModel)]="fecha_pedido"
+            displayFormat="DD/MM/YYYY"
+            placeholder="Seleccionar Fecha">
+          </ion-datetime>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">total</ion-label>
+          <ion-input [(ngModel)]="total" type="text" name="cantidad" required></ion-input>
+        </ion-item>
 
-
+        <ion-button expand="block" (click)="enviarCorreo(proveedorSeleccionado)">Enviar</ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

@@ -199,9 +199,29 @@ app.post('/add-proveedor', async (req, res) => {
       [nombre, direccion, telefono, email,  fecha_creacion, fecha_actualizacion]
     );
 
-    res.status(201).json({ message: 'proveedor agregado correctamente', cliente: result.rows[0] });
+    res.status(201).json({ message: 'proveedor agregado correctamente', proveedor_proveedor: result.rows[0] });
   } catch (error) {
     console.error('Error al agregar proveedor:', error);
     res.status(500).json({ message: 'Error al agregar proveedor', error });
+  }
+});
+
+app.post('/add-proveedor_pedido', async (req, res) => {
+  const { fecha_pedido, total, estado, proveedor_id,  nombreProveedor, pedido} = req.body;
+
+  if (!fecha_pedido || !total || !estado || !proveedor_id || !nombreProveedor || !pedido ) {
+    return res.status(400).json({ message: 'Faltan datos obligatorios del pedido' });
+  }
+
+  try {
+    const result = await pool.query(
+      'INSERT INTO proveedor_pedido (fecha_pedido, total, estado, proveedor_id, nombre_proveedor, pedido) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [fecha_pedido, total, estado, proveedor_id,  nombreProveedor, pedido]
+    );
+
+    res.status(201).json({ message: 'pedido agregado correctamente', proveedor_pedido: result.rows[0] });
+  } catch (error) {
+    console.error('Error al agregar pedido:', error);
+    res.status(500).json({ message: 'Error al agregar pedido', error });
   }
 });
