@@ -10,11 +10,7 @@ const jwt = require('jsonwebtoken');
 const app = express();
 const port = 3000;
 app.use(cors());
-// Configuración de la base de datos PostgreSQL en AWS
 
-
-// Middleware para parsear el cuerpo de las peticiones en formato JSON
-// CORS (para permitir peticiones desde tu frontend local)
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -170,7 +166,7 @@ app.get('/table/:tableName', async (req, res) => {
 app.get('/profile', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT id, username, email FROM auth_user WHERE id = $1', // Ajusta los campos según tu esquema de base de datos
+      'SELECT id, username, email FROM auth_user WHERE id = $1', 
       [req.user.id]
     );
 
