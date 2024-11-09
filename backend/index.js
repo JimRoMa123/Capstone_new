@@ -135,7 +135,6 @@ app.post('/login', async (req, res) => {
 
 
 
-// Ruta para listar todas las tablas en la base de datos
 app.get('/list-tables', async (req, res) => {
   try {
     const result = await pool.query(`
@@ -152,7 +151,7 @@ app.get('/list-tables', async (req, res) => {
 app.get('/table/:tableName', async (req, res) => {
   const { tableName } = req.params;
   try {
-    const result = await pool.query(`SELECT * FROM ${tableName} LIMIT 10;`); // LIMIT 10 para obtener solo las primeras 10 filas
+    const result = await pool.query(`SELECT * FROM ${tableName} LIMIT 10;`); 
     res.status(200).json({ message: `Datos de la tabla ${tableName}`, data: result.rows });
   } catch (error) {
     console.error(`Error consultando la tabla ${tableName}:`, error);
@@ -166,7 +165,7 @@ app.get('/table/:tableName', async (req, res) => {
 app.get('/profile', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT id, username, email FROM auth_user WHERE id = $1', 
+      'SELECT id, username, email FROM auth_user WHERE id = $1',
       [req.user.id]
     );
 
