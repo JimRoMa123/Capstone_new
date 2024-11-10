@@ -151,7 +151,7 @@ app.get('/list-tables', async (req, res) => {
 app.get('/table/:tableName', async (req, res) => {
   const { tableName } = req.params;
   try {
-    const result = await pool.query(`SELECT * FROM ${tableName} LIMIT 10;`); 
+    const result = await pool.query(`SELECT * FROM ${tableName} ;`); 
     res.status(200).json({ message: `Datos de la tabla ${tableName}`, data: result.rows });
   } catch (error) {
     console.error(`Error consultando la tabla ${tableName}:`, error);
@@ -182,19 +182,19 @@ app.get('/profile', authenticateToken, async (req, res) => {
 });
 
 app.post('/add-proveedor', async (req, res) => {
-  const { nombre, direccion, telefono, email,  fecha_creacion, fecha_actualizacion} = req.body;
+  const { nombre, direccion, telefono, email,  fecha_creacion, fecha_actualizacion, comuna_id, region_id, giro_id, logo, rut, user_id =1 } = req.body;
 
-  if (!nombre || !direccion || !telefono || !email || !fecha_creacion || !fecha_actualizacion) {
+  if (!nombre || !direccion || !telefono || !email || !fecha_creacion || !fecha_actualizacion || !comuna_id || !region_id || !giro_id || !rut ) {
     return res.status(400).json({ message: 'Faltan datos obligatorios pico' });
   }
 
   try {
     const result = await pool.query(
-      'INSERT INTO proveedor_proveedor (nombre, direccion, telefono, email,  fecha_creacion, fecha_actualizacion) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [nombre, direccion, telefono, email,  fecha_creacion, fecha_actualizacion]
+      'INSERT INTO proveedor (nombre, direccion, telefono, email,  fecha_creacion, fecha_actualizacion, comuna_id, region_id, giro_id, logo, rut, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
+      [nombre, direccion, telefono, email,  fecha_creacion, fecha_actualizacion, comuna_id, region_id, giro_id, logo, rut, user_id]
     );
 
-    res.status(201).json({ message: 'proveedor agregado correctamente', proveedor_proveedor: result.rows[0] });
+    res.status(201).json({ message: 'proveedor agregado correctamente', proveedor: result.rows[0] });
   } catch (error) {
     console.error('Error al agregar proveedor:', error);
     res.status(500).json({ message: 'Error al agregar proveedor', error });
