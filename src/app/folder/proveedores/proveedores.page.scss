@@ -1,0 +1,25 @@
+ion-item {
+    --inner-padding-end: 8px;
+  }
+  
+  ion-label {
+    font-weight: bold;
+    width: 90px; /* Ajusta el ancho de los labels */
+  }
+  
+  ion-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    font-size: 14px;
+  }
+  
+  ion-text {
+    color: #666; /* Cambia el color del texto si deseas resaltar el ID */
+    font-size: 14px;
+    margin-left: 10px;
+  }
+  ion-button {
+    font-size: 1 rem; /* Aumenta el tamaño de la fuente */
+ /* Ajusta el padding para hacerlo más alto */
+  }
+  

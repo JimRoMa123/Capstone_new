@@ -11,7 +11,8 @@ export class AppComponent implements OnInit {
   public appPages = [
     { title: 'Listar de Proveedores', url: '/folder/listar-proveedores', icon: 'pricetags' },
     { title: 'Proveedores', url: '/folder/proveedores', icon: 'pricetag' },
-    
+    { title: 'Crear categoria', url: '/folder/crear-categoria', icon: 'pricetags' },
+    { title: 'Crear producto', url: '/folder/crear-producto', icon: 'pricetags' },
     { title: 'Listar ordenes de compra', url: '/folder/listar-ordenes', icon: 'pricetags' },
     { title: 'Crear Cliente', url: '/folder/clientes', icon: 'pricetags' },
     { title: 'Listar Clientes', url: '/folder/listar-clientes', icon: 'pricetags' },

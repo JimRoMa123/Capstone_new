@@ -1,19 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import { IonicModule } from '@ionic/angular';
 
+import { CrearProductoPageRoutingModule } from './crear-producto-routing.module';
 
-import { ProveedoresPageRoutingModule } from './proveedores-routing.module';
-import { ProveedoresPage } from './proveedores.page';
+import { CrearProductoPage } from './crear-producto.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ProveedoresPageRoutingModule
+    CrearProductoPageRoutingModule
   ],
-  declarations: [ProveedoresPage]
+  declarations: [CrearProductoPage]
 })
-export class ProveedoresPageModule {}
+export class CrearProductoPageModule {}

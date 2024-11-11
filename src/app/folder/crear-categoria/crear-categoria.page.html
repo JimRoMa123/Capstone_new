@@ -1,0 +1,29 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Crear Categoria</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form (ngSubmit)="addCategoria()" #proveedorForm="ngForm">
+    <ion-item>
+      <ion-label position="floating">Nombre</ion-label>
+      <ion-input type="text" [(ngModel)]="nombre" name="nombre" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Descripcion</ion-label>
+      <ion-input type="text" [(ngModel)]="descripcion" name="descripcion" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">img (formato url)</ion-label>
+      <ion-input type="tel" [(ngModel)]="img" name="img" required></ion-input>
+    </ion-item>
+    <ion-button expand="full" type="submit">Agregar Categoria</ion-button>
+</form>
+
+</ion-content>

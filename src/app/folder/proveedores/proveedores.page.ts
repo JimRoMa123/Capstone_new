@@ -7,6 +7,8 @@ import { ComunaService } from 'src/app/services/comuna.service';
 import { RegionService } from 'src/app/services/region.service';
 import { GiroService } from 'src/app/services/giro.service';
 
+
+
 @Component({
   selector: 'app-proveedores',
   templateUrl: './proveedores.page.html',
@@ -34,6 +36,19 @@ export class ProveedoresPage implements OnInit {
   comunas: any[] = [];
   giros: any[]=[]
 
+
+  comunasFiltradas: any[] = [];
+  searchComuna: string = '';
+  nombreComuna: string = '';
+
+  regionesFiltradas: any[] = [];
+  searchRegion: string = '';
+  nombreRegion: string = '';
+
+
+  girosFiltrados: any[] = [];
+  searchGiro: string = '';
+
   constructor(
     private http: HttpClient,
     private alertController: AlertController,
@@ -45,23 +60,50 @@ export class ProveedoresPage implements OnInit {
   ngOnInit() {
     this.cargarComunas(); 
     this.cargarRegiones(); 
-    this.cargarGiro(); // Cargar regiones al iniciar
+    this.cargarGiro(); 
   }
 
-  cargarRegiones(){
-    this.regionService.getRegion().subscribe(data => {
-      this.regiones = data;
-    });
-  }
-  cargarGiro(){
-    this.giroService.getGiro().subscribe(data => {
-      this.giros = data;
-    });
-  }
   cargarComunas() {
-    this.comunaService.getComunas().subscribe(data => {
+    this.comunaService.getComunas().subscribe((data) => {
       this.comunas = data;
+      this.comunasFiltradas = [...data]; 
     });
+  }
+
+  cargarRegiones() {
+    this.regionService.getRegion().subscribe((data) => {
+      this.regiones = data;
+      this.regionesFiltradas = [...data];
+    });
+  }
+
+  cargarGiro() {
+    this.giroService.getGiro().subscribe((data) => {
+      this.giros = data;
+      this.girosFiltrados = [...data];
+    });
+  }
+
+  // Filtrado de comunas
+  filtrarComunas() {
+    this.comunasFiltradas = this.comunas.filter((comuna) =>
+      comuna.nombre.toLowerCase().includes(this.searchComuna.toLowerCase())
+    );
+  }
+  
+
+  // Filtrado de regiones
+  filtrarRegiones() {
+    this.regionesFiltradas = this.regiones.filter((region) =>
+      region.nombre.toLowerCase().includes(this.searchRegion.toLowerCase())
+    );
+  }
+
+  // Filtrado de giros
+  filtrarGiros() {
+    this.girosFiltrados = this.giros.filter((giro) =>
+      giro.nombre.toLowerCase().includes(this.searchGiro.toLowerCase())
+    );
   }
 
   // Métodos para abrir y cerrar las modales
@@ -87,12 +129,14 @@ export class ProveedoresPage implements OnInit {
     console.log("Comuna seleccionada:", comuna);
     this.comunaId = comuna.codigo_comuna;
     this.cerrarModal();
+    this.nombreComuna = comuna.nombre;
   }
 
   seleccionarRegion(region: any) {
     console.log("Region seleccionada:", region);
     this.regionId = region.codigo_region;
     this.cerrarModal();
+    this.nombreRegion = region.nombre
   }
 
   seleccionarGiro(giro: any) {

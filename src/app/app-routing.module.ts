@@ -9,6 +9,16 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'folder/crear-producto',
+    loadChildren: () => import('./folder/crear-producto/crear-producto.module').then(m => m.CrearProductoPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'folder/crear-categoria',
+    loadChildren: () => import('./folder/crear-categoria/crear-categoria.module').then(m => m.CrearCategoriaPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'folder/listar-clientes',
     loadChildren: () => import('./folder/listar-clientes/listar-clientes.module').then(m => m.ListarClientesPageModule),
     canActivate: [AuthGuard]

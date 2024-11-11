@@ -220,3 +220,44 @@ app.post('/add-proveedor_pedido', async (req, res) => {
     res.status(500).json({ message: 'Error al agregar pedido', error });
   }
 });
+
+
+app.post('/add-categoria', async (req, res) => {
+  const { nombre, descripcion, img, fecha_creacion,  user_id =1} = req.body;
+
+  if (!nombre || !descripcion || !img || !fecha_creacion || !user_id  ) {
+    return res.status(400).json({ message: 'Faltan datos obligatorios del pedido' });
+  }
+
+  try {
+    const result = await pool.query(
+      'INSERT INTO categoria (nombre, descripcion, img, fecha_creacion, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [nombre, descripcion, img, fecha_creacion,  user_id]
+    );
+
+    res.status(201).json({ message: 'categoria agregado correctamente', categoria: result.rows[0] });
+  } catch (error) {
+    console.error('Error al agregar:', error);
+    res.status(500).json({ message: 'Error al agregar', error });
+  }
+});
+
+app.post('/add-producto', async (req, res) => {
+  const { nombre, descripcion, precio, sku,  proveedor_id, img , categoria_id} = req.body;
+
+  if (!nombre || !descripcion || !img || !precio || !sku || !proveedor_id || !categoria_id  ) {
+    return res.status(400).json({ message: 'Faltan datos obligatorios del pedido' });
+  }
+
+  try {
+    const result = await pool.query(
+      'INSERT INTO producto (nombre, descripcion, img, precio, sku, proveedor_id, categoria_id) VALUES ($1, $2, $3, $4, $5, $6 , $7) RETURNING *',
+      [ nombre, descripcion, precio, sku,  proveedor_id, img , categoria_id]
+    );
+
+    res.status(201).json({ message: 'producto agregado correctamente', producto: result.rows[0] });
+  } catch (error) {
+    console.error('Error al agregar:', error);
+    res.status(500).json({ message: 'Error al agregar', error });
+  }
+});
