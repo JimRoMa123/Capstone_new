@@ -13,7 +13,7 @@ export class GiroService {
   constructor(private http: HttpClient) {}
 
   getGiro(): Observable<any[]> {
-    return this.http.get<any>(`${this.apiUrl}/table/proveedor_giro`).pipe(
+    return this.http.get<any>(`${this.apiUrl}/table/giro`).pipe(
       map(response => response.data)
     );
   }

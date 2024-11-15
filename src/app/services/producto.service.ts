@@ -12,7 +12,7 @@ export class ProductoService {
 
   getProducto(): Observable<any[]> {
     return this.http.get<any>(`${this.apiUrl}/table/producto`).pipe(
-      map(response => response.data) // Extrae el array de comunas desde `data`
+      map(response => response.data) 
     );
   }
 }

@@ -13,7 +13,7 @@ export class CategoriaService {
 
   getCategoria(): Observable<any[]> {
     return this.http.get<any>(`${this.apiUrl}/table/categoria`).pipe(
-      map(response => response.data) // Extrae el array de comunas desde `data`
+      map(response => response.data) 
     );
   }
 }

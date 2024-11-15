@@ -16,7 +16,16 @@ export class ClientesPage {
   fecha_nacimiento: string = '';
   genero: string = '';
   rut: string = '';
-  
+  isFechaNacimientoModalOpen = false;
+
+
+openFechaNacimientoModal() {
+  this.isFechaNacimientoModalOpen = true;
+}
+
+closeFechaNacimientoModal() {
+  this.isFechaNacimientoModalOpen = false;
+}
 
 
   constructor(private http: HttpClient,

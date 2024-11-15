@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -7,43 +7,45 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <form (ngSubmit)="addCliente()" #clienteForm="ngForm">
-    <ion-item>
+    <ion-item lines="full">
       <ion-label position="floating">Nombre</ion-label>
       <ion-input type="text" [(ngModel)]="nombre" name="nombre" required></ion-input>
     </ion-item>
-    <ion-item>
-      <ion-label position="floating">rut</ion-label>
+
+    <ion-item lines="full">
+      <ion-label position="floating">RUT</ion-label>
       <ion-input type="text" [(ngModel)]="rut" name="rut" required></ion-input>
     </ion-item>
 
-    <ion-item>
+    <ion-item lines="full">
       <ion-label position="floating">Apellido</ion-label>
       <ion-input type="text" [(ngModel)]="apellido" name="apellido" required></ion-input>
     </ion-item>
 
-    <ion-item>
+    <ion-item lines="full">
       <ion-label position="floating">Dirección</ion-label>
       <ion-input type="text" [(ngModel)]="direccion" name="direccion" required></ion-input>
     </ion-item>
 
-    <ion-item>
+    <ion-item lines="full">
       <ion-label position="floating">Teléfono</ion-label>
       <ion-input type="tel" [(ngModel)]="telefono" name="telefono" required></ion-input>
     </ion-item>
 
-    <ion-item>
+    <ion-item lines="full">
       <ion-label position="floating">Email</ion-label>
       <ion-input type="email" [(ngModel)]="email" name="email" required></ion-input>
     </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Fecha de Nacimiento</ion-label>
-      <ion-datetime [(ngModel)]="fecha_nacimiento" name="fecha_nacimiento" required></ion-datetime>
+    <!-- Botón para abrir el modal de Fecha de Nacimiento -->
+    <ion-item lines="full" class="fecha-button" button (click)="openFechaNacimientoModal()">
+      <ion-label>Fecha de Nacimiento</ion-label>
+      <ion-text>{{ fecha_nacimiento | date: 'dd/MM/yyyy' || 'Seleccionar Fecha' }}</ion-text>
     </ion-item>
 
-    <ion-item>
+    <ion-item lines="full">
       <ion-label position="floating">Género</ion-label>
       <ion-select [(ngModel)]="genero" name="genero" required>
         <ion-select-option value="M">Masculino</ion-select-option>
@@ -52,6 +54,33 @@
       </ion-select>
     </ion-item>
 
-    <ion-button expand="full" type="submit" [disabled]="!clienteForm.form.valid">Agregar Cliente</ion-button>
+    <ion-button expand="block" type="submit" [disabled]="!clienteForm.form.valid" color="success">
+      Agregar Cliente
+    </ion-button>
   </form>
+
+  <!-- Modal para seleccionar Fecha de Nacimiento -->
+  <ion-modal [isOpen]="isFechaNacimientoModalOpen" cssClass="custom-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="tertiary">
+          <ion-title>Seleccionar Fecha de Nacimiento</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeFechaNacimientoModal()">Cancelar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-item>
+          <ion-label>Fecha de Nacimiento</ion-label>
+          <ion-datetime
+            [(ngModel)]="fecha_nacimiento"
+            display-format="DD/MM/YYYY"
+            placeholder="Seleccionar Fecha">
+          </ion-datetime>
+        </ion-item>
+        <ion-button expand="block" (click)="closeFechaNacimientoModal()" color="primary">Seleccionar</ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

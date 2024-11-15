@@ -1,0 +1,11 @@
+.fecha-button {
+    --background: #3880ff; /* Color de fondo resaltado */
+    color: white; /* Color de texto blanco */
+    --ion-item-background-hover: #3171e0; /* Color de fondo al pasar el cursor */
+    --color-activated: #ffffff;
+
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

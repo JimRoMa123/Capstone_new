@@ -29,17 +29,13 @@ ion-menu.md ion-list#inbox-list {
 ion-menu.md ion-list#inbox-list ion-list-header {
   font-size: 22px;
   font-weight: 600;
-
   min-height: 20px;
 }
 
 ion-menu.md ion-list#labels-list ion-list-header {
   font-size: 16px;
-
   margin-bottom: 18px;
-
   color: #757575;
-
   min-height: 26px;
 }
 
@@ -110,10 +106,97 @@ ion-menu.ios ion-note {
 ion-note {
   display: inline-block;
   font-size: 16px;
-
   color: var(--ion-color-medium-shade);
 }
 
 ion-item.selected {
   --color: var(--ion-color-primary);
+}
+
+/* Estilos para el submenú desplegable */
+
+.expandable-content {
+  overflow: hidden;
+  transform-origin: top;
+  transition: transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease;
+  max-height: 0;
+  transform: scaleY(0);
+  opacity: 0;
+  padding-left: 16px; /* Sangría para el submenú */
+  background-color: rgba(255, 255, 255, 0.03); /* Fondo ligeramente diferente */
+  border-left: 2px solid var(--ion-color-primary); /* Borde de color primario para contención */
+  border-radius: 2px;
+}
+
+.expanded {
+  transform: scaleY(1);
+  opacity: 1;
+  max-height: 500px; /* Altura máxima suficiente para el contenido del submenú */
+}
+
+.collapsed {
+  transform: scaleY(0);
+  opacity: 0;
+  max-height: 0;
+  pointer-events: none; /* Evita la interacción cuando está colapsado */
+}
+
+/* Estilos adicionales y mejoras visuales */
+
+/* Panel de Usuario */
+.user-panel {
+  padding: 10px;
+  font-size: 0.9rem;
+  background-color: rgba(var(--ion-color-primary-rgb), 0.1);
+}
+
+/* Indicador de Submenú Activo */
+.active-menu {
+  background-color: rgba(var(--ion-color-primary-rgb), 0.1);
+  font-weight: bold;
+}
+
+/* Subtítulos de Submenú */
+.menu-subtitle {
+  font-size: 0.8rem;
+  color: var(--ion-color-medium);
+  padding-left: 16px;
+  margin-bottom: 8px;
+}
+
+/* Feedback Visual en Iconos del Menú */
+ion-menu-toggle ion-item:hover ion-icon {
+  color: var(--ion-color-primary);
+  transform: scale(1.1);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* Separador de Categorías */
+ion-item-divider {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--ion-color-primary);
+  padding: 8px 16px;
+  background-color: rgba(var(--ion-color-primary-rgb), 0.05);
+}
+
+/* Animación de Despliegue del Menú Lateral */
+ion-menu {
+  animation: fadeInLeft 0.4s ease forwards;
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Transición Suave en el Contenido Principal */
+ion-router-outlet {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }

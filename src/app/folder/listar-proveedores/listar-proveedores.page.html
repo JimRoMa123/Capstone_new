@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -8,6 +8,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Indicador de carga mientras se obtienen los proveedores -->
   <div *ngIf="isLoading" class="loading-container">
     <ion-spinner name="crescent"></ion-spinner>
     <p>Cargando proveedores...</p>
@@ -22,7 +23,7 @@
         <p>Teléfono: {{ proveedor.telefono }}</p>
         <p>Email: {{ proveedor.email }}</p>
       </ion-label>
-      <ion-button (click)="seleccionarProveedor(proveedor)" color="primary">
+      <ion-button expand="block" (click)="seleccionarProveedor(proveedor)" color="tertiary">
         Hacer pedido
       </ion-button>
     </ion-item>
@@ -32,32 +33,36 @@
   <ion-modal [isOpen]="isModalOpen">
     <ng-template>
       <ion-header>
-        <ion-toolbar>
+        <ion-toolbar color="dark">
           <ion-title>Orden de Compra</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="setOpenModalOrden(false)">Cancelar</ion-button>
+            <ion-button (click)="setOpenModalOrden(false)" color="light">Cancelar</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-content>
-        <ion-item>
+      <ion-content class="ion-padding">
+        <ion-item lines="full">
           <ion-label position="stacked">Pedido</ion-label>
-          <ion-textarea [(ngModel)]="mensajeCorreo"></ion-textarea>
+          <ion-textarea [(ngModel)]="mensajeCorreo" placeholder="Escribe el detalle del pedido"></ion-textarea>
         </ion-item>
-        <ion-item>
-          <ion-label>Fecha de Entrega</ion-label>
+        
+        <ion-item lines="full">
+          <ion-label position="stacked">Fecha de Entrega</ion-label>
           <ion-datetime
             [(ngModel)]="fecha_pedido"
             displayFormat="DD/MM/YYYY"
             placeholder="Seleccionar Fecha">
           </ion-datetime>
         </ion-item>
-        <ion-item>
-          <ion-label position="floating">total</ion-label>
-          <ion-input [(ngModel)]="total" type="text" name="cantidad" required></ion-input>
+
+        <ion-item lines="full">
+          <ion-label position="stacked">Total</ion-label>
+          <ion-input [(ngModel)]="total" type="number" placeholder="Ingresa el total" required></ion-input>
         </ion-item>
 
-        <ion-button expand="block" (click)="enviarCorreo(proveedorSeleccionado)">Enviar</ion-button>
+        <ion-button expand="block" color="success" (click)="enviarCorreo(proveedorSeleccionado)">
+          Enviar
+        </ion-button>
       </ion-content>
     </ng-template>
   </ion-modal>

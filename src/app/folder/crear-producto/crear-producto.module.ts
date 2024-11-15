@@ -1,20 +1,19 @@
+// src/app/folder/crear-producto/crear-producto.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // <-- Asegúrate de importar ReactiveFormsModule aquí
 import { IonicModule } from '@ionic/angular';
-
-import { CrearProductoPageRoutingModule } from './crear-producto-routing.module';
-
 import { CrearProductoPage } from './crear-producto.page';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
+  declarations: [CrearProductoPage],
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule, // <-- Incluye ReactiveFormsModule aquí
     IonicModule,
-    CrearProductoPageRoutingModule
+    RouterModule.forChild([{ path: '', component: CrearProductoPage }])
   ],
-  declarations: [CrearProductoPage]
 })
 export class CrearProductoPageModule {}

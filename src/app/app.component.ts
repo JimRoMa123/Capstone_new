@@ -8,18 +8,24 @@ import { HttpHeaders } from '@angular/common/http';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  public appPages = [
-    { title: 'Listar de Proveedores', url: '/folder/listar-proveedores', icon: 'pricetags' },
-    { title: 'Proveedores', url: '/folder/proveedores', icon: 'pricetag' },
-    { title: 'Crear categoria', url: '/folder/crear-categoria', icon: 'pricetags' },
-    { title: 'Crear producto', url: '/folder/crear-producto', icon: 'pricetags' },
-    { title: 'Listar ordenes de compra', url: '/folder/listar-ordenes', icon: 'pricetags' },
-    { title: 'Crear Cliente', url: '/folder/clientes', icon: 'pricetags' },
-    { title: 'Listar Clientes', url: '/folder/listar-clientes', icon: 'pricetags' },
-    
+  public providerPages = [
+    { title: 'Crear Producto', url: '/folder/crear-producto', icon: 'cube' },
+    { title: 'Crear proveedor', url: '/folder/proveedores', icon: 'people-outline' },
+    { title: 'Listar de Proveedores', url: '/folder/listar-proveedores', icon: 'list' },
+    { title: 'Crear Categoría', url: '/folder/crear-categoria', icon: 'layers' },
+    { title: 'Listar Órdenes de Compra', url: '/folder/listar-ordenes', icon: 'receipt' },
   ];
+
+  public clientPages = [
+    { title: 'Crear Cliente', url: '/folder/clientes', icon: 'person-add' },
+    { title: 'Listar Clientes', url: '/folder/listar-clientes', icon: 'people' },
+  ];
+
   public labels = [''];
   user: any;
+
+  showProviderMenu = false;
+  showClientMenu = false;
 
   constructor(private authService: AuthService) {}
 
@@ -27,8 +33,16 @@ export class AppComponent implements OnInit {
     this.loadUserProfile();
   }
 
+  toggleProviderMenu() {
+    this.showProviderMenu = !this.showProviderMenu;
+  }
+
+  toggleClientMenu() {
+    this.showClientMenu = !this.showClientMenu;
+  }
+
   loadUserProfile() {
-    const token = localStorage.getItem('token'); // Asegúrate de que el token se haya guardado en el localStorage al iniciar sesión
+    const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
     this.authService.getUserProfile().subscribe(

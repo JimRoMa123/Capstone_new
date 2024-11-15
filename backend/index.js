@@ -243,21 +243,23 @@ app.post('/add-categoria', async (req, res) => {
 });
 
 app.post('/add-producto', async (req, res) => {
-  const { nombre, descripcion, precio, sku,  proveedor_id, img , categoria_id} = req.body;
+  const { nombre, descripcion, precio, sku, proveedor_id, img, categoria_id, cantidad, user_id } = req.body;
 
-  if (!nombre || !descripcion || !img || !precio || !sku || !proveedor_id || !categoria_id  ) {
+  // Verificación de campos obligatorios
+  if (!nombre || !descripcion || !img || !precio || !sku || !proveedor_id || !categoria_id || !cantidad || !user_id) {
     return res.status(400).json({ message: 'Faltan datos obligatorios del pedido' });
   }
 
   try {
+    // Consulta SQL actualizada para incluir todos los campos
     const result = await pool.query(
-      'INSERT INTO producto (nombre, descripcion, img, precio, sku, proveedor_id, categoria_id) VALUES ($1, $2, $3, $4, $5, $6 , $7) RETURNING *',
-      [ nombre, descripcion, precio, sku,  proveedor_id, img , categoria_id]
+      'INSERT INTO producto (nombre, descripcion, img, precio, sku, proveedor_id, categoria_id, cantidad, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+      [nombre, descripcion, img, precio, sku, proveedor_id, categoria_id, cantidad, user_id]
     );
 
-    res.status(201).json({ message: 'producto agregado correctamente', producto: result.rows[0] });
+    res.status(201).json({ message: 'Producto agregado correctamente', producto: result.rows[0] });
   } catch (error) {
-    console.error('Error al agregar:', error);
-    res.status(500).json({ message: 'Error al agregar', error });
+    console.error('Error al agregar producto:', error);
+    res.status(500).json({ message: 'Error al agregar el producto', error });
   }
 });
