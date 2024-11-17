@@ -18,15 +18,16 @@ app.use((req, res, next) => {
 });
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'capstone-pyme.c7gago4iy9g8.us-east-2.rds.amazonaws.com',
-    database: 'postgres_pyme',
-    password: 'postgres',
-    port: 5432,
-    ssl: {
-        rejectUnauthorized: false // Cambia esto según tus necesidades de seguridad
-    }
+  user: 'postgres', // Usuario de la base de datos
+  host: 'horus-erp.c7gago4iy9g8.us-east-2.rds.amazonaws.com',
+  database: 'horus_erp', 
+  password: 'postgres', 
+  port: 5432, 
+  ssl: {
+      rejectUnauthorized: false 
+  }
 });
+
 
 
 app.use(bodyParser.json());
@@ -202,24 +203,45 @@ app.post('/add-proveedor', async (req, res) => {
 });
 
 app.post('/add-proveedor_pedido', async (req, res) => {
-  const { fecha_pedido, total, estado, proveedor_id,  nombreProveedor, pedido} = req.body;
+  const { fecha_pedido, total, estado, proveedor_id, productos } = req.body;
 
-  if (!fecha_pedido || !total || !estado || !proveedor_id || !nombreProveedor || !pedido ) {
+  if (!fecha_pedido || !total || !estado || !proveedor_id || !productos) {
     return res.status(400).json({ message: 'Faltan datos obligatorios del pedido' });
   }
 
   try {
-    const result = await pool.query(
-      'INSERT INTO proveedor_pedido (fecha_pedido, total, estado, proveedor_id, nombre_proveedor, pedido) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [fecha_pedido, total, estado, proveedor_id,  nombreProveedor, pedido]
+    // Crear el pedido en la tabla 'pedido' y obtener el pedido_id
+    const pedidoResult = await pool.query(
+      'INSERT INTO pedido (fecha_pedido, total, estado, proveedor_id) VALUES ($1, $2, $3, $4) RETURNING id',
+      [fecha_pedido, total, estado, proveedor_id]
     );
+    const pedidoId = pedidoResult.rows[0].id; // Obtenemos el ID del pedido creado
 
-    res.status(201).json({ message: 'pedido agregado correctamente', proveedor_pedido: result.rows[0] });
+    // Insertar los productos en la tabla 'detalle_pedido' con el pedido_id
+    for (const producto of productos) {
+      const subtotal = producto.cantidad * producto.precio_unitario; // Calculamos el subtotal
+      await pool.query(
+        'INSERT INTO detalle_pedido (cantidad, precio_unitario, subtotal, fecha_creacion, pedido_id, proveedor_id, producto_id) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+        [
+          producto.cantidad, 
+          producto.precio_unitario, 
+          subtotal, 
+          new Date(), // fecha_creacion
+          pedidoId, 
+          proveedor_id, 
+          producto.producto_id
+        ]
+      );
+    }
+
+    res.status(201).json({ message: 'Pedido y productos agregados correctamente en detalle_pedido' });
   } catch (error) {
     console.error('Error al agregar pedido:', error);
     res.status(500).json({ message: 'Error al agregar pedido', error });
   }
 });
+
+
 
 
 app.post('/add-categoria', async (req, res) => {
@@ -243,18 +265,61 @@ app.post('/add-categoria', async (req, res) => {
 });
 
 app.post('/add-producto', async (req, res) => {
-  const { nombre, descripcion, precio, sku, proveedor_id, img, categoria_id, cantidad, user_id } = req.body;
+  const {
+    nombre,
+    descripcion,
+    img,
+    sku,
+    proveedor_id,
+    categoria_id,
+    cantidad,
+    porc_ganancias,
+    precio_compra,
+    precio_venta,
+  } = req.body;
+
+  // Campos fijos
+  const user_id = 1;
+  const bodega_id = 1;
+  const fecha_creacion = new Date(); // Fecha actual en el servidor como fecha de creación
 
   // Verificación de campos obligatorios
-  if (!nombre || !descripcion || !img || !precio || !sku || !proveedor_id || !categoria_id || !cantidad || !user_id) {
-    return res.status(400).json({ message: 'Faltan datos obligatorios del pedido' });
+  if (
+    !nombre ||
+    !descripcion ||
+    !img ||
+    !sku ||
+    !proveedor_id ||
+    !categoria_id ||
+    !cantidad ||
+    !porc_ganancias ||
+    !precio_compra ||
+    !precio_venta
+  ) {
+    return res.status(400).json({ message: 'Faltan datos obligatorios del producto' });
   }
 
   try {
-    // Consulta SQL actualizada para incluir todos los campos
     const result = await pool.query(
-      'INSERT INTO producto (nombre, descripcion, img, precio, sku, proveedor_id, categoria_id, cantidad, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
-      [nombre, descripcion, img, precio, sku, proveedor_id, categoria_id, cantidad, user_id]
+      `INSERT INTO producto 
+      (nombre, descripcion, img, sku, proveedor_id, categoria_id, cantidad, porc_ganancias, 
+      fecha_creacion, bodega_id, user_id, precio_compra, precio_venta) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`,
+      [
+        nombre,
+        descripcion,
+        img,
+        sku,
+        proveedor_id,
+        categoria_id,
+        cantidad,
+        porc_ganancias,
+        fecha_creacion,
+        bodega_id,
+        user_id,
+        precio_compra,
+        precio_venta,
+      ]
     );
 
     res.status(201).json({ message: 'Producto agregado correctamente', producto: result.rows[0] });
@@ -263,3 +328,51 @@ app.post('/add-producto', async (req, res) => {
     res.status(500).json({ message: 'Error al agregar el producto', error });
   }
 });
+
+
+
+app.get('/productos-por-proveedor/:proveedorId', async (req, res) => {
+  const { proveedorId } = req.params;
+  try {
+    const result = await pool.query(
+      'SELECT * FROM producto WHERE proveedor_id = $1',
+      [proveedorId]
+    );
+    res.status(200).json({ message: 'Productos del proveedor obtenidos', data: result.rows });
+  } catch (error) {
+    console.error('Error al obtener productos del proveedor:', error);
+    res.status(500).json({ message: 'Error al obtener productos del proveedor', error });
+  }
+});
+
+app.get('/pedidos', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT p.id, p.total, p.estado, p.fecha_pedido, prov.nombre AS proveedor_nombre
+      FROM pedido p
+      JOIN proveedor prov ON p.proveedor_id = prov.id
+    `);
+    res.status(200).json({ data: result.rows });
+  } catch (error) {
+    console.error('Error al obtener pedidos:', error);
+    res.status(500).json({ message: 'Error al obtener pedidos', error });
+  }
+});
+
+app.get('/detalle-pedido/:pedidoId', async (req, res) => {
+  const { pedidoId } = req.params;
+  try {
+    const result = await pool.query(`
+      SELECT dp.*, p.nombre AS producto_nombre, prov.nombre AS proveedor_nombre
+      FROM detalle_pedido dp
+      JOIN producto p ON dp.producto_id = p.id
+      JOIN proveedor prov ON dp.proveedor_id = prov.id
+      WHERE dp.pedido_id = $1
+    `, [pedidoId]);
+    res.status(200).json({ data: result.rows });
+  } catch (error) {
+    console.error('Error al obtener detalle del pedido:', error);
+    res.status(500).json({ message: 'Error al obtener detalle del pedido', error });
+  }
+});
+

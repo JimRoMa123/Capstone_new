@@ -1,28 +1,52 @@
 import { Component, OnInit } from '@angular/core';
-import { Proovedores } from 'src/app/models/proovedores';
-import { ProovedoresService } from 'src/app/services/proovedores.service';
-import { EmailComposer } from '@awesome-cordova-plugins/email-composer/ngx';
-import { Platform } from '@ionic/angular';
-import { OrdenDeCompra } from 'src/app/models/orden-de-compra';
-import { OrdendeCompraService } from 'src/app/services/orden-de-compra.service';
-
-
+import { PedidoService } from '../../services/pedido.service';
+import { DetallePedidoService } from '../../services/detalle-pedido.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-listar-ordenes',
   templateUrl: './listar-ordenes.page.html',
   styleUrls: ['./listar-ordenes.page.scss'],
-  
 })
 export class ListarOrdenesPage implements OnInit {
-  ordenes: OrdenDeCompra[] = [];
-  constructor(private ordenOrdendeCompraService: OrdendeCompraService,) { }
+  ordenes: any[] = [];
+  detallePedido: any[] = [];
+  isModalOpen = false;
 
-  ionViewWillEnter() {
-    this.ordenes = this.ordenOrdendeCompraService.obtenerOrdendeCompra();
-  }
+  constructor(
+    private pedidoService: PedidoService,
+    private detallePedidoService: DetallePedidoService,
+    private alertController: AlertController
+  ) {}
 
   ngOnInit() {
+    this.cargarPedidos();
   }
 
+  cargarPedidos() {
+    this.pedidoService.getPedidos().subscribe(
+      (response) => {
+        this.ordenes = response.data;
+      },
+      (error) => {
+        console.error('Error al cargar pedidos:', error);
+      }
+    );
+  }
+
+  abrirDetallePedido(pedidoId: number) {
+    this.detallePedidoService.getDetallePedido(pedidoId).subscribe(
+      (response) => {
+        this.detallePedido = response.data;
+        this.isModalOpen = true;
+      },
+      (error) => {
+        console.error('Error al cargar detalle del pedido:', error);
+      }
+    );
+  }
+
+  cerrarModal() {
+    this.isModalOpen = false;
+  }
 }

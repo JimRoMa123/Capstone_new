@@ -25,11 +25,6 @@
     </ion-item>
 
     <ion-item lines="full">
-      <ion-label position="floating">Precio</ion-label>
-      <ion-input formControlName="precio" type="number"></ion-input>
-    </ion-item>
-
-    <ion-item lines="full">
       <ion-label position="floating">SKU</ion-label>
       <ion-input formControlName="sku" type="text"></ion-input>
     </ion-item>
@@ -49,6 +44,21 @@
     <ion-item lines="full">
       <ion-label position="floating">Cantidad</ion-label>
       <ion-input formControlName="cantidad" type="number"></ion-input>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-label position="floating">Porcentaje de Ganancia</ion-label>
+      <ion-input formControlName="porc_ganancias" type="number"></ion-input>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-label position="floating">Precio de Compra</ion-label>
+      <ion-input formControlName="precio_compra" type="number"></ion-input>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-label position="floating">Precio de Venta</ion-label>
+      <ion-input formControlName="precio_venta" type="number"></ion-input>
     </ion-item>
 
     <ion-button expand="block" type="submit" [disabled]="productForm.invalid" color="success">

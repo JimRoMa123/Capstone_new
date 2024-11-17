@@ -1,5 +1,3 @@
-// src/app/folder/crear-producto/crear-producto.page.ts
-
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
@@ -13,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./crear-producto.page.scss'],
 })
 export class CrearProductoPage implements OnInit {
-  productForm: FormGroup; // Formulario para el producto
+  productForm: FormGroup;
   proveedores: any[] = [];
   categorias: any[] = [];
   isProveedorModalOpen = false;
@@ -28,17 +26,20 @@ export class CrearProductoPage implements OnInit {
     private categoriaService: CategoriaService,
     private http: HttpClient
   ) {
-    // Configuración del formulario
+    const currentDate = new Date().toISOString(); // Fecha actual
+
     this.productForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       img: ['', Validators.required],
-      precio: [0, [Validators.required, Validators.min(0)]],
       sku: ['', Validators.required],
       proveedor_id: ['', Validators.required],
       categoria_id: ['', Validators.required],
-      cantidad: [0, [Validators.required, Validators.min(0)]],
-      user_id: [1], // Valor fijo para el campo user_id
+      cantidad: [null, [Validators.required, Validators.min(1)]],
+      porc_ganancias: [null, [Validators.required, Validators.min(0)]],
+      precio_compra: [null, [Validators.required, Validators.min(0.01)]],
+      precio_venta: [null, [Validators.required, Validators.min(0.01)]],
+      fecha_creacion: [currentDate, Validators.required], // Fecha de creación inicializada automáticamente
     });
   }
 
@@ -47,7 +48,6 @@ export class CrearProductoPage implements OnInit {
     this.loadCategorias();
   }
 
-  // Cargar Proveedores
   loadProveedores() {
     this.proveedorService.getProveedoresData().subscribe(
       (data) => (this.proveedores = data),
@@ -55,7 +55,6 @@ export class CrearProductoPage implements OnInit {
     );
   }
 
-  // Cargar Categorías
   loadCategorias() {
     this.categoriaService.getCategoria().subscribe(
       (data) => (this.categorias = data),
@@ -63,7 +62,6 @@ export class CrearProductoPage implements OnInit {
     );
   }
 
-  // Funciones para abrir y cerrar modales
   openProveedorModal() {
     this.isProveedorModalOpen = true;
   }
@@ -80,21 +78,18 @@ export class CrearProductoPage implements OnInit {
     this.isCategoriaModalOpen = false;
   }
 
-  // Seleccionar proveedor
   selectProveedor(proveedor: any) {
     this.productForm.patchValue({ proveedor_id: proveedor.id });
     this.selectedProveedorName = proveedor.nombre;
     this.closeProveedorModal();
   }
 
-  // Seleccionar categoría
   selectCategoria(categoria: any) {
     this.productForm.patchValue({ categoria_id: categoria.id });
     this.selectedCategoriaName = categoria.nombre;
     this.closeCategoriaModal();
   }
 
-  // Función para enviar el formulario
   async addProduct() {
     if (this.productForm.invalid) {
       const alert = await this.alertController.create({
@@ -118,8 +113,9 @@ export class CrearProductoPage implements OnInit {
       });
       await alert.present();
 
-      this.productForm.reset();
-      this.productForm.patchValue({ user_id: 1 }); // Restablece user_id a 1 después de limpiar
+      this.productForm.reset({
+        fecha_creacion: new Date().toISOString(), // Restablece con la fecha actual
+      });
       this.selectedProveedorName = '';
       this.selectedCategoriaName = '';
     } catch (error) {

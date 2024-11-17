@@ -8,13 +8,13 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  <!-- Indicador de carga mientras se obtienen los proveedores -->
+  <!-- Indicador de carga -->
   <div *ngIf="isLoading" class="loading-container">
     <ion-spinner name="crescent"></ion-spinner>
     <p>Cargando proveedores...</p>
   </div>
 
-  <!-- Lista de proveedores cuando isLoading es false -->
+  <!-- Lista de proveedores -->
   <ion-list *ngIf="!isLoading">
     <ion-item *ngFor="let proveedor of proveedores">
       <ion-label>
@@ -23,7 +23,7 @@
         <p>Teléfono: {{ proveedor.telefono }}</p>
         <p>Email: {{ proveedor.email }}</p>
       </ion-label>
-      <ion-button expand="block" (click)="seleccionarProveedor(proveedor)" color="tertiary">
+      <ion-button expand="block" color="tertiary" (click)="seleccionarProveedor(proveedor)">
         Hacer pedido
       </ion-button>
     </ion-item>
@@ -36,33 +36,96 @@
         <ion-toolbar color="dark">
           <ion-title>Orden de Compra</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="setOpenModalOrden(false)" color="light">Cancelar</ion-button>
+            <ion-button (click)="cerrarModal()" color="light">Cancelar</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
+        <!-- Botón para abrir el modal de productos -->
+        <ion-item lines="none">
+          <ion-button expand="block" color="tertiary" (click)="abrirModalProductos()">
+            Seleccionar Productos
+          </ion-button>
+        </ion-item>
+
+        <!-- Divider -->
+        <div class="divider"></div>
+
+        <!-- Lista de productos seleccionados -->
+        <ion-item>
+          <ion-label>
+            <h3>Productos seleccionados:</h3>
+          </ion-label>
+        </ion-item>
+        <ion-list>
+          <ion-item *ngFor="let producto of productosSeleccionados">
+            <ion-label>
+              <h2>{{ producto.nombre }}</h2>
+              <p>Cantidad: {{ producto.cantidadSeleccionada }}</p>
+              <p>Precio Unitario: {{ producto.precio_compra | currency }}</p>
+              <p>Precio Total unitario: {{ (producto.precio_compra * producto.cantidadSeleccionada) | currency }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <!-- Divider -->
+        <div class="divider"></div>
+
+        <!-- Detalles del pedido -->
         <ion-item lines="full">
           <ion-label position="stacked">Pedido</ion-label>
-          <ion-textarea [(ngModel)]="mensajeCorreo" placeholder="Escribe el detalle del pedido"></ion-textarea>
-        </ion-item>
-        
-        <ion-item lines="full">
-          <ion-label position="stacked">Fecha de Entrega</ion-label>
-          <ion-datetime
-            [(ngModel)]="fecha_pedido"
-            displayFormat="DD/MM/YYYY"
-            placeholder="Seleccionar Fecha">
-          </ion-datetime>
+          <ion-textarea
+            [(ngModel)]="mensajeCorreo"
+            placeholder="Escribe el detalle del pedido">
+          </ion-textarea>
         </ion-item>
 
         <ion-item lines="full">
           <ion-label position="stacked">Total</ion-label>
-          <ion-input [(ngModel)]="total" type="number" placeholder="Ingresa el total" required></ion-input>
+          <ion-input [(ngModel)]="total" type="number" disabled></ion-input>
         </ion-item>
 
-        <ion-button expand="block" color="success" (click)="enviarCorreo(proveedorSeleccionado)">
-          Enviar
+        <!-- Botón de enviar -->
+        <ion-button expand="block" color="success" (click)="enviarPedido()">
+          Enviar Pedido
         </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Modal de Productos -->
+  <ion-modal [isOpen]="isProductosModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="tertiary">
+          <ion-title>Seleccionar Productos</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="cerrarModalProductos()" color="light">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+
+        <ion-list>
+          <ion-item *ngFor="let producto of productos" lines="inset" class="product-item">
+            <ion-checkbox
+              slot="start"
+              [(ngModel)]="producto.seleccionado"
+              (ionChange)="actualizarSeleccionados()">
+            </ion-checkbox>
+            <ion-label>
+              <h2>{{ producto.nombre }}</h2>
+              <p><strong>Precio Compra:</strong> {{ producto.precio_compra}}</p>
+              <p><strong>Stock:</strong> {{ producto.cantidad }}</p>
+            </ion-label>
+            <ion-input
+              placeholder="Cantidad"
+              [(ngModel)]="producto.cantidadSeleccionada"
+              type="number"
+              (ionChange)="actualizarSeleccionados()">
+            </ion-input>
+          </ion-item>
+        </ion-list>
       </ion-content>
     </ng-template>
   </ion-modal>

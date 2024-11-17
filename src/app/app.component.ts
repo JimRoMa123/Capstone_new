@@ -10,7 +10,7 @@ import { HttpHeaders } from '@angular/common/http';
 export class AppComponent implements OnInit {
   public providerPages = [
     { title: 'Crear Producto', url: '/folder/crear-producto', icon: 'cube' },
-    { title: 'Crear proveedor', url: '/folder/proveedores', icon: 'people-outline' },
+    { title: 'Crear proveedor', url: '/folder/proveedores', icon: 'person-add' },
     { title: 'Listar de Proveedores', url: '/folder/listar-proveedores', icon: 'list' },
     { title: 'Crear Categoría', url: '/folder/crear-categoria', icon: 'layers' },
     { title: 'Listar Órdenes de Compra', url: '/folder/listar-ordenes', icon: 'receipt' },

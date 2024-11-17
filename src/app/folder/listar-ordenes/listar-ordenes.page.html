@@ -7,25 +7,42 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  
-
+<ion-content [fullscreen]="true" class="ion-padding">
   <ion-list>
-    <ion-item *ngFor="let orden of ordenes">
+    <ion-item *ngFor="let orden of ordenes" (click)="abrirDetallePedido(orden.id)">
       <ion-label>
-        <h2>Pedido: {{ orden.orden }}</h2>
-        <p>Proveedor: {{orden.proveedor.nombre}}</p>
-        <p>Email proveedor: {{orden.proveedor.email}}</p>
-        <p>Teléfono: {{ orden.proveedor.telefono }}</p>
-        <p>Estado del pedido: {{ orden.estado }}</p>
-        <p>Fecha del envio: {{orden.fecha}}</p>
-        <p>Cantidad del envio: {{orden.cantidad}}</p>
+        <h2>Proveedor: {{ orden.proveedor_nombre }}</h2>
+        <p>Total: ${{ orden.total }}</p>
+        <p>Estado: {{ orden.estado }}</p>
+        <p>Fecha: {{ orden.fecha_pedido }}</p>
       </ion-label>
-
-    
-     
-
     </ion-item>
   </ion-list>
 
+  <!-- Modal para el detalle del pedido -->
+  <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Detalle del Pedido</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list>
+          <ion-item *ngFor="let detalle of detallePedido">
+            <ion-label>
+              <h3>Producto: {{ detalle.producto_nombre }}</h3>
+              <p>Cantidad: {{ detalle.cantidad }}</p>
+              <p>Precio Unitario: ${{ detalle.precio_unitario }}</p>
+              <p>Subtotal: ${{ detalle.subtotal }}</p>
+              <p>Fecha de Creación: {{ detalle.fecha_creacion }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

@@ -1,0 +1,28 @@
+.product-item {
+    margin-bottom: 10px;
+    padding: 10px 0;
+    align-items: center;
+  }
+  
+  ion-label h2 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  ion-label p {
+    font-size: 14px;
+    color: #ccc;
+    margin: 0;
+  }
+  
+  .divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 20px 0;
+  }
+  
+  ion-input[placeholder] {
+    color: #888; /* Color para el texto del placeholder */
+  }
+  
