@@ -19,9 +19,9 @@ app.use((req, res, next) => {
 
 const pool = new Pool({
   user: 'postgres', // Usuario de la base de datos
-  host: 'horus-erp.c7gago4iy9g8.us-east-2.rds.amazonaws.com',
-  database: 'horus_erp', 
-  password: 'postgres', 
+  host: 'erp-pyme.postgres.database.azure.com',
+  database: 'postgres', 
+  password: 'capstonePyme321/', 
   port: 5432, 
   ssl: {
       rejectUnauthorized: false 
