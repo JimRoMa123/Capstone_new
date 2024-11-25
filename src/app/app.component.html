@@ -6,7 +6,7 @@
           <ion-list-header>Bienvenido</ion-list-header>
           <ion-note *ngIf="user">Hola &#64; {{user.email}}</ion-note>
 
-          <!-- Sección de Proveedores con Submenú Desplegable -->
+        
           <ion-item button (click)="toggleProviderMenu()" lines="none">
             <ion-icon slot="start" name="business"></ion-icon>
             <ion-label>Proveedores</ion-label>
@@ -22,7 +22,7 @@
             </ion-menu-toggle>
           </div>
 
-          <!-- Sección de Clientes con Submenú Desplegable -->
+         
           <ion-item button (click)="toggleClientMenu()" lines="none">
             <ion-icon slot="start" name="people"></ion-icon>
             <ion-label>Clientes</ion-label>
@@ -41,13 +41,7 @@
 
         </ion-list>
 
-        <ion-list id="labels-list">
-          <ion-list-header>Labels</ion-list-header>
-          <ion-item *ngFor="let label of labels" lines="none">
-            <ion-icon aria-hidden="true" slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
-            <ion-label>{{ label }}</ion-label>
-          </ion-item>
-        </ion-list>
+       
       </ion-content>
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>
