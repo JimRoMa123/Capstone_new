@@ -87,7 +87,6 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Ejemplo en tu endpoint de login
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
@@ -226,7 +225,7 @@ app.post('/add-proveedor_pedido', async (req, res) => {
           producto.cantidad, 
           producto.precio_unitario, 
           subtotal, 
-          new Date(), // fecha_creacion
+          new Date(),
           pedidoId, 
           proveedor_id, 
           producto.producto_id
@@ -240,9 +239,6 @@ app.post('/add-proveedor_pedido', async (req, res) => {
     res.status(500).json({ message: 'Error al agregar pedido', error });
   }
 });
-
-
-
 
 app.post('/add-categoria', async (req, res) => {
   const { nombre, descripcion, img, fecha_creacion,  user_id =1} = req.body;
@@ -329,8 +325,6 @@ app.post('/add-producto', async (req, res) => {
   }
 });
 
-
-
 app.get('/productos-por-proveedor/:proveedorId', async (req, res) => {
   const { proveedorId } = req.params;
   try {
@@ -376,3 +370,105 @@ app.get('/detalle-pedido/:pedidoId', async (req, res) => {
   }
 });
 
+app.post('/add-venta', async (req, res) => {
+  const { impuesto, metodo_pago, estado, cliente_id, user_id, productos } = req.body;
+
+  if (!impuesto || !metodo_pago || !estado || !cliente_id || !user_id || !productos || productos.length === 0) {
+    return res.status(400).json({ message: 'Faltan datos obligatorios para crear la venta.' });
+  }
+
+  try {
+    // Insertar la venta en la tabla `venta`
+    const ventaResult = await pool.query(
+      'INSERT INTO venta (impuesto, metodo_pago, estado, cliente_id, fecha_creacion, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+      [impuesto, metodo_pago, estado, cliente_id, new Date(), user_id]
+    );
+
+    const ventaId = ventaResult.rows[0].id;
+
+    // Insertar los detalles de la venta en `detalle_venta`
+    for (const producto of productos) {
+      const subtotal = producto.cantidad * producto.precio_unitario; // Subtotal sin impuesto
+      const descuentoAplicado = subtotal * (producto.descuento / 100 || 0); // Descuento en dinero
+      const totalConImpuesto = (subtotal - descuentoAplicado) * (1 + impuesto / 100); // Total con impuesto
+
+      await pool.query(
+        'INSERT INTO detalle_venta (cantidad, precio_unitario, descuento, producto_id, venta_id, user_id, total_venta) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+        [
+          producto.cantidad,
+          producto.precio_unitario,
+          producto.descuento || 0,
+          producto.producto_id,
+          ventaId,
+          user_id,
+          totalConImpuesto.toFixed(2), // Redondear a 2 decimales
+        ]
+      );
+    }
+
+    res.status(201).json({ message: 'Venta y detalles registrados correctamente', ventaId });
+  } catch (error) {
+    console.error('Error al crear la venta:', error);
+    res.status(500).json({ message: 'Error al crear la venta', error });
+  }
+});
+
+
+
+
+
+
+
+
+
+app.get('/ventas', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT v.id, v.impuesto, v.metodo_pago, v.estado, v.fecha_creacion, 
+             c.nombre AS cliente_nombre, c.apellido AS cliente_apellido, 
+             u.username AS usuario
+      FROM venta v
+      JOIN cliente c ON v.cliente_id = c.id
+      JOIN auth_user u ON v.user_id = u.id
+      WHERE DATE_PART('month', v.fecha_creacion) = DATE_PART('month', CURRENT_DATE)
+      AND DATE_PART('year', v.fecha_creacion) = DATE_PART('year', CURRENT_DATE)
+    `);
+    res.status(200).json({ data: result.rows });
+  } catch (error) {
+    console.error('Error al obtener ventas:', error);
+    res.status(500).json({ message: 'Error al obtener ventas', error });
+  }
+});
+
+
+app.get('/productos', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT id, sku, nombre, descripcion, precio_venta, cantidad
+      FROM producto
+    `);
+    res.status(200).json({ message: 'Productos obtenidos correctamente', data: result.rows });
+  } catch (error) {
+    console.error('Error al obtener productos:', error);
+    res.status(500).json({ message: 'Error al obtener productos', error });
+  }
+});
+
+app.get('/detalle-venta/:ventaId', async (req, res) => {
+  const { ventaId } = req.params;
+
+  try {
+    const result = await pool.query(`
+      SELECT dv.cantidad, dv.precio_unitario, dv.descuento, dv.total_venta, 
+             p.nombre
+      FROM detalle_venta dv
+      JOIN producto p ON dv.producto_id = p.id
+      WHERE dv.venta_id = $1
+    `, [ventaId]);
+
+    res.status(200).json({ data: result.rows });
+  } catch (error) {
+    console.error('Error al obtener el detalle de la venta:', error);
+    res.status(500).json({ message: 'Error al obtener el detalle de la venta', error });
+  }
+});

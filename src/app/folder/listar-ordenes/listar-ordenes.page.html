@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -7,11 +7,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <ion-list>
-    <ion-item *ngFor="let orden of ordenes" (click)="abrirDetallePedido(orden.id)">
+<ion-content [fullscreen]="true" class="ion-padding content-centered">
+  <!-- Lista de Pedidos -->
+  <ion-list class="pedido-list">
+    <ion-item *ngFor="let orden of ordenes" lines="full" (click)="abrirDetallePedido(orden.id)" button>
       <ion-label>
-        <h2>Proveedor: {{ orden.proveedor_nombre }}</h2>
+        <h2 class="pedido-titulo">Proveedor: {{ orden.proveedor_nombre }}</h2>
         <p>Total: ${{ orden.total }}</p>
         <p>Estado: {{ orden.estado }}</p>
         <p>Fecha: {{ orden.fecha_pedido }}</p>
@@ -19,7 +20,8 @@
     </ion-item>
   </ion-list>
 
-  <ion-modal [isOpen]="isModalOpen">
+  <!-- Modal de Detalle del Pedido -->
+  <ion-modal [isOpen]="isModalOpen" cssClass="modal-centered">
     <ng-template>
       <ion-header>
         <ion-toolbar color="primary">
@@ -30,10 +32,10 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <ion-list>
-          <ion-item *ngFor="let detalle of detallePedido">
+        <ion-list class="detalle-list">
+          <ion-item *ngFor="let detalle of detallePedido" lines="full">
             <ion-label>
-              <h3>Producto: {{ detalle.producto_nombre }}</h3>
+              <h3 class="detalle-titulo">Producto: {{ detalle.producto_nombre }}</h3>
               <p>Cantidad: {{ detalle.cantidad }}</p>
               <p>Precio Unitario: ${{ detalle.precio_unitario }}</p>
               <p>Subtotal: ${{ detalle.subtotal }}</p>

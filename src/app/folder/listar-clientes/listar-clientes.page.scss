@@ -6,4 +6,95 @@
     height: 100%;
     text-align: center;
   }
-  
+  /* Centrado y fondo */
+ion-content {
+  --background: #f8f9fa; /* Fondo claro */
+  text-align: center;
+}
+
+/* Títulos y textos */
+h2 {
+  color: #343a40; /* Gris oscuro */
+  font-size: 1.25rem;
+}
+
+p {
+  color: #6c757d; /* Gris medio */
+}
+
+/* Botones */
+ion-button {
+  --border-radius: 8px;
+  margin: 0.5rem 0;
+}
+
+ion-button[color="success"] {
+  background-color: #28a745;
+  color: white;
+}
+
+ion-button[color="success"]:hover {
+  background-color: #218838;
+}
+
+ion-button[color="danger"] {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Modal */
+.modal-content {
+  text-align: left;
+  --background: #ffffff;
+  border-radius: 10px;
+}
+
+/* Productos seleccionados */
+/* Ajustes generales de la lista */
+.productos-seleccionados {
+  margin: 1rem auto;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor inline para etiquetas y entradas */
+.inline-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+/* Espaciado entre etiqueta y campo */
+.inline-field label {
+  font-weight: bold;
+  margin-right: 0.5rem;
+  color: #6c757d; /* Gris medio */
+}
+
+/* Estilo para los campos de entrada */
+.inline-field .input-field {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 0.3rem;
+  background-color: #f9f9f9;
+}
+
+
+/* Clientes lista */
+.clientes-lista {
+  margin: 1rem auto;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Texto de carga */
+.loading-text {
+  font-size: 1.25rem;
+  color: #6c757d;
+}

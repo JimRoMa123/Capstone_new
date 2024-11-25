@@ -14,6 +14,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'folder/listar-ventas',
+    loadChildren: () => import('./folder/listar-ventas/listar-ventas.module').then(m => m.ListarVentasPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'folder/crear-categoria',
     loadChildren: () => import('./folder/crear-categoria/crear-categoria.module').then(m => m.CrearCategoriaPageModule),
     canActivate: [AuthGuard]

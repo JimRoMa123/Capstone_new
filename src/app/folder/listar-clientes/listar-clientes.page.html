@@ -23,7 +23,110 @@
         <p>Teléfono: {{ cliente.telefono }}</p>
         <p>Email: {{ cliente.email }}</p>
       </ion-label>
+      <ion-button color="primary" (click)="abrirModal(cliente)">Realizar Venta</ion-button>
     </ion-item>
+    
+    <!-- Modal para realizar venta -->
+    <ion-modal [isOpen]="isModalOpen">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar color="primary">
+            <ion-title>Realizar Venta</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-item>
+            <ion-label position="stacked">Cliente</ion-label>
+            <ion-input [value]="clienteSeleccionado?.nombre" readonly></ion-input>
+          </ion-item>
+        
+          <ion-item>
+            <ion-label position="stacked">Método de Pago</ion-label>
+            <ion-select [(ngModel)]="metodoPago">
+              <ion-select-option value="Efectivo">Efectivo</ion-select-option>
+              <ion-select-option value="Tarjeta">Tarjeta</ion-select-option>
+              <ion-select-option value="Transferencia">Transferencia</ion-select-option>
+            </ion-select>
+          </ion-item>
+        
+          <ion-item>
+            <ion-label position="stacked">Estado</ion-label>
+            <ion-select [(ngModel)]="estado">
+              <ion-select-option value="Pendiente">Pendiente</ion-select-option>
+              <ion-select-option value="Pagado">Pagado</ion-select-option>
+            </ion-select>
+          </ion-item>
+        
+          <!-- Seleccionador de productos -->
+          <ion-item>
+            <ion-label position="stacked">Seleccionar Producto</ion-label>
+            <ion-select (ionChange)="agregarProductoSeleccionado($event.detail.value)">
+              <ion-select-option *ngFor="let producto of productos" [value]="producto">
+                {{ producto.nombre }} - {{ producto.precio_venta | currency }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        
+          <!-- Lista de productos seleccionados -->
+          <ion-list class="productos-seleccionados">
+            <ion-item *ngFor="let producto of productosSeleccionados">
+              <ion-label>
+                <h2>{{ producto.nombre }}</h2>
+                <p>Precio: {{ producto.precio_venta | currency }}</p>
+          
+                <!-- Contenedor alineado para Cantidad -->
+                <div class="inline-field">
+                  <label for="cantidad">Cantidad:</label>
+                  <ion-input
+                    id="cantidad"
+                    type="number"
+                    [(ngModel)]="producto.cantidadSeleccionada"
+                    class="input-field"
+                  ></ion-input>
+                </div>
+          
+                <!-- Contenedor alineado para Descuento -->
+                <div class="inline-field">
+                  <label for="descuento">Descuento (%):</label>
+                  <ion-input
+                    id="descuento"
+                    type="number"
+                    [(ngModel)]="producto.descuento"
+                    class="input-field"
+                  ></ion-input>
+                </div>
+              </ion-label>
+          
+              <ion-button color="danger" (click)="eliminarProductoSeleccionado(producto.id)">Eliminar</ion-button>
+            </ion-item>
+          </ion-list>
+          
+        
+          <!-- Mostrar el total calculado y la cantidad de productos -->
+          <ion-item>
+            <ion-label>
+              Total (con impuesto): {{ calcularTotal().total | currency }}
+            </ion-label>
+          </ion-item>
+        
+          <ion-item>
+            <ion-label>
+              Cantidad de Productos: {{ calcularTotal().cantidad }}
+            </ion-label>
+          </ion-item>
+        
+          <ion-button expand="block" color="success" (click)="realizarVenta()">Confirmar Venta</ion-button>
+        </ion-content>
+        
+        
+
+      </ng-template>
+    </ion-modal>
+    
+    
   </ion-list>
 
   <!-- Mensaje si no hay clientes y la carga terminó -->

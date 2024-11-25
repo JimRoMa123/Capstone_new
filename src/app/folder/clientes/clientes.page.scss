@@ -9,3 +9,52 @@
     align-items: center;
     justify-content: center;
   }
+
+  /* Estilos principales para centrar el contenido */
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos de los campos de entrada */
+ion-item {
+  margin-bottom: 1rem;
+}
+
+ion-label {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Botón de agregar cliente */
+ion-button[type="submit"] {
+  margin-top: 1rem;
+}
+
+/* Modal de fecha de nacimiento */
+.custom-modal {
+  --ion-background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.fecha-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+}
+
+/* Ajuste para que el contenido del modal esté centrado */
+ion-content.ion-padding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

@@ -96,6 +96,8 @@ export class ListarProveedoresPage implements OnInit {
     );
   }
 
+  
+
   enviarPedido() {
     const productosSeleccionados = this.productosSeleccionados.map(producto => ({
       producto_id: producto.id,

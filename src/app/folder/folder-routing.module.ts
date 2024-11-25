@@ -40,6 +40,10 @@ const routes: Routes = [
   {
     path: 'crear-producto',
     loadChildren: () => import('./crear-producto/crear-producto.module').then( m => m.CrearProductoPageModule)
+  },
+  {
+    path: 'listar-ventas',
+    loadChildren: () => import('./listar-ventas/listar-ventas.module').then( m => m.ListarVentasPageModule)
   }
 ];
 

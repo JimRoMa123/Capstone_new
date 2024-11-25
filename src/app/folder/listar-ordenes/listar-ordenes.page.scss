@@ -1,0 +1,50 @@
+/* Centrar el contenido principal */
+.content-centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Estilo para la lista de pedidos */
+  .pedido-list {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .pedido-titulo {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Estilo para el modal de detalle */
+  .modal-centered {
+    --ion-background-color: #ffffff;
+    --border-radius: 12px;
+    padding: 1rem;
+  }
+  
+  .detalle-list {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .detalle-titulo {
+    font-weight: bold;
+    color: #555;
+  }
+  
+  /* Ajustes generales para los ítems */
+  ion-item {
+    margin-bottom: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  /* Botones de acción */
+  ion-button {
+    margin-top: 1rem;
+  }
+  

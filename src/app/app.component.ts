@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   public clientPages = [
     { title: 'Crear Cliente', url: '/folder/clientes', icon: 'person-add' },
     { title: 'Listar Clientes', url: '/folder/listar-clientes', icon: 'people' },
+    { title: 'Listar ventas del mes', url: '/folder/listar-ventas', icon: 'tagprice' },
   ];
 
   public labels = [''];
