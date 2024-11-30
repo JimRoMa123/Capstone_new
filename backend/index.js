@@ -182,24 +182,73 @@ app.get('/profile', authenticateToken, async (req, res) => {
 });
 
 app.post('/add-proveedor', async (req, res) => {
-  const { nombre, direccion, telefono, email,  fecha_creacion, fecha_actualizacion, comuna_id, region_id, giro_id, logo, rut, user_id =1 } = req.body;
+  const {
+    nombre,
+    direccion,
+    telefono,
+    email,
+    fecha_creacion,
+    fecha_actualizacion,
+    comuna_id,
+    region_id,
+    giro_id,
+    logo,
+    rut,
+    latitud, // Nueva columna
+    longitud, // Nueva columna
+    user_id = 1,
+  } = req.body;
 
-  if (!nombre || !direccion || !telefono || !email || !fecha_creacion || !fecha_actualizacion || !comuna_id || !region_id || !giro_id || !rut ) {
-    return res.status(400).json({ message: 'Faltan datos obligatorios pico' });
+  // Validar que los datos obligatorios estén presentes
+  if (
+    !nombre ||
+    !direccion ||
+    !telefono ||
+    !email ||
+    !fecha_creacion ||
+    !fecha_actualizacion ||
+    !comuna_id ||
+    !region_id ||
+    !giro_id ||
+    !rut ||
+    !latitud || // Validar latitud
+    !longitud // Validar longitud
+  ) {
+    return res.status(400).json({ message: 'Faltan datos obligatorios' });
   }
 
   try {
+    // Insertar en la base de datos
     const result = await pool.query(
-      'INSERT INTO proveedor (nombre, direccion, telefono, email,  fecha_creacion, fecha_actualizacion, comuna_id, region_id, giro_id, logo, rut, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
-      [nombre, direccion, telefono, email,  fecha_creacion, fecha_actualizacion, comuna_id, region_id, giro_id, logo, rut, user_id]
+      'INSERT INTO proveedor (nombre, direccion, telefono, email, fecha_creacion, fecha_actualizacion, comuna_id, region_id, giro_id, logo, rut, latitud, longitud, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *',
+      [
+        nombre,
+        direccion,
+        telefono,
+        email,
+        fecha_creacion,
+        fecha_actualizacion,
+        comuna_id,
+        region_id,
+        giro_id,
+        logo,
+        rut,
+        latitud, // Insertar latitud
+        longitud, // Insertar longitud
+        user_id,
+      ]
     );
 
-    res.status(201).json({ message: 'proveedor agregado correctamente', proveedor: result.rows[0] });
+    res.status(201).json({
+      message: 'Proveedor agregado correctamente',
+      proveedor: result.rows[0],
+    });
   } catch (error) {
     console.error('Error al agregar proveedor:', error);
     res.status(500).json({ message: 'Error al agregar proveedor', error });
   }
 });
+
 
 app.post('/add-proveedor_pedido', async (req, res) => {
   const { fecha_pedido, total, estado, proveedor_id, productos } = req.body;
@@ -277,9 +326,7 @@ app.post('/add-producto', async (req, res) => {
   // Campos fijos
   const user_id = 1;
   const bodega_id = 1;
-  const fecha_creacion = new Date(); // Fecha actual en el servidor como fecha de creación
-
-  // Verificación de campos obligatorios
+  const fecha_creacion = new Date(); 
   if (
     !nombre ||
     !descripcion ||
@@ -414,13 +461,6 @@ app.post('/add-venta', async (req, res) => {
 });
 
 
-
-
-
-
-
-
-
 app.get('/ventas', async (req, res) => {
   try {
     const result = await pool.query(`
@@ -472,3 +512,88 @@ app.get('/detalle-venta/:ventaId', async (req, res) => {
     res.status(500).json({ message: 'Error al obtener el detalle de la venta', error });
   }
 });
+
+app.put('/update-proveedor/:id', async (req, res) => {
+  const { id } = req.params;
+  const { nombre, direccion, telefono, email, latitud, longitud } = req.body;
+
+  try {
+    const result = await pool.query(
+      'UPDATE proveedor SET nombre = $1, direccion = $2, telefono = $3, email = $4, latitud = $5, longitud = $6 WHERE id = $7 RETURNING *',
+      [nombre, direccion, telefono, email, latitud, longitud, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Proveedor no encontrado' });
+    }
+
+    res.status(200).json({ message: 'Proveedor actualizado', proveedor: result.rows[0] });
+  } catch (error) {
+    console.error('Error al actualizar proveedor:', error);
+    res.status(500).json({ message: 'Error al actualizar proveedor', error });
+  }
+});
+
+app.get('/ventas-mes', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `WITH semanas AS (
+  SELECT 
+    generate_series(
+      date_trunc('month', CURRENT_DATE), 
+      date_trunc('month', CURRENT_DATE) + interval '1 month' - interval '1 day',
+      '1 week'
+    ) AS inicio_semana
+),
+ventas_semanales AS (
+  SELECT 
+    COUNT(v.id) AS total_ventas,
+    s.inicio_semana
+  FROM semanas s
+  LEFT JOIN venta v 
+    ON v.fecha_creacion >= s.inicio_semana 
+   AND v.fecha_creacion < s.inicio_semana + interval '1 week'
+  GROUP BY s.inicio_semana
+  ORDER BY s.inicio_semana
+)
+SELECT 
+  (SELECT COUNT(*) FROM venta WHERE EXTRACT(MONTH FROM fecha_creacion) = EXTRACT(MONTH FROM CURRENT_DATE)) AS total_ventas,
+  ARRAY(
+    SELECT COALESCE(total_ventas, 0)
+    FROM ventas_semanales
+  ) AS ventas_semanales
+FROM ventas_semanales
+LIMIT 1;
+
+`
+    );
+
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error al obtener ventas del mes:', error);
+    res.status(500).json({ message: 'Error al obtener ventas del mes' });
+  }
+});
+
+
+
+app.get('/estado-compras', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT estado, COUNT(*) AS total 
+      FROM pedido 
+      GROUP BY estado
+      ORDER BY estado
+    `);
+
+    if (result.rows.length === 0) {
+      return res.status(200).json({ message: 'No hay pedidos en el sistema' });
+    }
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error al obtener estado de las compras:', error);
+    res.status(500).json({ message: 'Error al obtener estado de las compras' });
+  }
+});
+

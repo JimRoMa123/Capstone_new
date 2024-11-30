@@ -20,4 +20,9 @@ export class AuthService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`${this.apiUrl}/profile`, { headers });
   }
+
+  logout() {
+    localStorage.removeItem('token'); // Elimina el token
+  }
+  
 }

@@ -44,6 +44,14 @@ const routes: Routes = [
   {
     path: 'listar-ventas',
     loadChildren: () => import('./listar-ventas/listar-ventas.module').then( m => m.ListarVentasPageModule)
+  },
+  {
+    path: 'proveedor-ubicacion',
+    loadChildren: () => import('./proveedor-ubicacion/proveedor-ubicacion.module').then( m => m.ProveedorUbicacionPageModule)
+  },
+  {
+    path: 'main-dashboar',
+    loadChildren: () => import('./main-dashboar/main-dashboar.module').then( m => m.MainDashboarPageModule)
   }
 ];
 

@@ -73,3 +73,89 @@ ion-input {
   margin-left: 1rem;
   max-width: 100px;
 }
+/* Centrar el contenido principal */
+.content-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilo para la lista de pedidos */
+.pedido-list {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+}
+
+.pedido-titulo {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Estilo para el modal de detalle */
+.modal-centered {
+  --ion-background-color: #ffffff;
+  --border-radius: 12px;
+  padding: 1rem;
+}
+
+
+.botones-en-columna {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px; /* Espacio entre los botones */
+  margin-top: 10px;
+}
+
+.boton-hacer-pedido,
+.boton-editar {
+  --background: var(--ion-color-primary);
+  --color: white;
+  --border-radius: 8px; /* Bordes más suaves */
+  --padding: 10px 20px; /* Ajusta el relleno */
+  font-weight: bold;
+  font-size: 14px; /* Asegúrate de que el texto sea claro */
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.boton-hacer-pedido {
+  --background: #4caf50; /* Verde */
+}
+
+.boton-editar {
+  --background: #3f51b5; /* Azul */
+}
+
+/* Animación hover */
+.boton-hacer-pedido:hover,
+.boton-editar:hover {
+  transform: scale(1.02); /* Un pequeño zoom */
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Texto en los botones */
+.boton-hacer-pedido ion-icon,
+.boton-editar ion-icon {
+  font-size: 18px;
+  margin-right: 8px; /* Espacio entre el ícono y el texto */
+}
+
+ion-label {
+  font-size: 16px; /* Tamaño de fuente claro */
+  font-weight: 500; /* Peso medio para claridad */
+  color: #333; /* Asegúrate de un buen contraste con el fondo */
+}
+
+.direccion {
+  font-size: 14px;
+  color: #7173f5; /* Asegúrate de que este color tenga suficiente contraste */
+  text-decoration: underline; /* Mejor visibilidad */
+}
+

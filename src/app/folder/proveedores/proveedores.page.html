@@ -126,6 +126,27 @@
       <ion-input type="text" [(ngModel)]="rut" name="rut" required></ion-input>
     </ion-item>
 
+    <ion-item lines="full">
+      <ion-label position="floating">Latitud</ion-label>
+      <ion-input
+        type="text"
+        [(ngModel)]="latitud"
+        name="latitud"
+        required
+      ></ion-input>
+    </ion-item>
+    
+    <ion-item lines="full">
+      <ion-label position="floating">Longitud</ion-label>
+      <ion-input
+        type="text"
+        [(ngModel)]="longitud"
+        name="longitud"
+        required
+      ></ion-input>
+    </ion-item>
+    
+
     <ion-button expand="block" type="submit" color="success">
       Agregar Proveedor
     </ion-button>

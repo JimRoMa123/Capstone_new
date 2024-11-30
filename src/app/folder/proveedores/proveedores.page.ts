@@ -27,6 +27,9 @@ export class ProveedoresPage implements OnInit {
   giroNombre: string= '';
   logo: string = '';
   rut: string = '';
+  latitud: string = '';
+  longitud: string = '';
+
 
   isModalOpen: boolean = false;
   isModalOpenRegion: boolean = false;
@@ -161,9 +164,11 @@ export class ProveedoresPage implements OnInit {
       region_id: this.regionId,
       giro_id: this.giroId,
       logo: this.logo,
-      rut: this.rut
+      rut: this.rut,
+      latitud: this.latitud, // Nueva propiedad
+      longitud: this.longitud // Nueva propiedad
     };
-
+  
     this.http.post('http://localhost:3000/add-proveedor', proveedorData).subscribe(
       async () => {
         const alert = await this.alertController.create({
@@ -176,12 +181,14 @@ export class ProveedoresPage implements OnInit {
         this.telefono = '';
         this.email = '';
         this.comunaId = 0; 
-        this.comunaSeleccionada= undefined;
+        this.comunaSeleccionada = undefined;
         this.regionId = 0;
-        this.giroId= 0;
-        this.giroNombre= '';
-        this.logo= '';
+        this.giroId = 0;
+        this.giroNombre = '';
+        this.logo = '';
         this.rut = '';
+        this.latitud = ''; // Reiniciar latitud
+        this.longitud = ''; // Reiniciar longitud
         await alert.present();
       },
       async (error) => {
@@ -195,4 +202,5 @@ export class ProveedoresPage implements OnInit {
       }
     );
   }
+  
 }

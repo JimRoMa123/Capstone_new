@@ -5,8 +5,13 @@ import { AuthGuard } from './guard/auth.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'folder/listar-clientes', 
+    redirectTo: 'folder/main-dashboar', 
     pathMatch: 'full'
+  },
+  {
+    path: 'folder/main-dashboar',
+    loadChildren: () => import('./folder/main-dashboar/main-dashboar.module').then(m => m.MainDashboarPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'folder/crear-producto',
@@ -16,6 +21,12 @@ const routes: Routes = [
   {
     path: 'folder/listar-ventas',
     loadChildren: () => import('./folder/listar-ventas/listar-ventas.module').then(m => m.ListarVentasPageModule),
+    canActivate: [AuthGuard]
+  },
+
+  {
+    path: 'folder/proveedor-ubicacion',
+    loadChildren: () => import('./folder/proveedor-ubicacion/proveedor-ubicacion.module').then(m => m.ProveedorUbicacionPageModule),
     canActivate: [AuthGuard]
   },
   {

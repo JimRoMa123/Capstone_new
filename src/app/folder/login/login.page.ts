@@ -12,13 +12,18 @@ export class LoginPage {
   password: string = '';
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.router.navigate(['/folder/listar-clientes']);
+    }
+  }
 
   onLogin() {
     this.authService.login(this.username, this.password).subscribe(response => {
       if (response.token) {
         localStorage.setItem('auth_token', response.token);
-        this.router.navigate(['/folder/listar-clientes']);
+        this.router.navigate(['/folder/main-dashboard']); // Redirige al dashboard
         this.errorMessage = ''; 
       } else {
         this.errorMessage = 'Inicio de sesión fallido. Por favor, verifica tus credenciales.';
@@ -28,4 +33,7 @@ export class LoginPage {
       console.error('Error de autenticación:', error);
     });
   }
+  
+  
+  
 }
