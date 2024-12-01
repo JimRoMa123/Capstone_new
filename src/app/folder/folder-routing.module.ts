@@ -52,6 +52,14 @@ const routes: Routes = [
   {
     path: 'main-dashboar',
     loadChildren: () => import('./main-dashboar/main-dashboar.module').then( m => m.MainDashboarPageModule)
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () => import('./dashboard/dashboard.module').then( m => m.DashboardPageModule)
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () => import('./dashboard/dashboard.module').then( m => m.DashboardPageModule)
   }
 ];
 

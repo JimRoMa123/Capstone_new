@@ -8,12 +8,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { AuthInterceptor } from '../interceptors/auth.interceptor';
-import { HighchartsChartModule } from 'highcharts-angular';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+
 
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, HighchartsChartModule ],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule,  BrowserAnimationsModule ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, AuthService,  {
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,

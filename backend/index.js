@@ -92,7 +92,7 @@ app.post('/login', async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT id, password FROM auth_user WHERE username = $1',
+      'SELECT id FROM auth_user WHERE username = $1',
       [username]
     );
 
@@ -597,3 +597,46 @@ app.get('/estado-compras', async (req, res) => {
   }
 });
 
+app.get('/total-proveedores', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT COUNT(*) AS total FROM proveedor');
+    res.status(200).json(result.rows[0].total);
+  } catch (error) {
+    console.error('Error al obtener total de proveedores:', error);
+    res.status(500).json({ message: 'Error al obtener total de proveedores' });
+  }
+});
+
+app.get('/top-clientes', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT c.nombre, c.apellido, COUNT(v.id) AS total_compras
+      FROM cliente c
+      JOIN venta v ON v.cliente_id = c.id
+      GROUP BY c.id
+      ORDER BY total_compras DESC
+      LIMIT 5
+    `);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error al obtener top clientes:', error);
+    res.status(500).json({ message: 'Error al obtener top clientes' });
+  }
+});
+
+app.get('/proveedor-estrella', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT p.nombre, COUNT(dv.id) AS total_ventas
+      FROM proveedor p
+      JOIN detalle_pedido dv ON dv.proveedor_id = p.id
+      GROUP BY p.id
+      ORDER BY total_ventas DESC
+      LIMIT 1
+    `);
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error al obtener proveedor estrella:', error);
+    res.status(500).json({ message: 'Error al obtener proveedor estrella' });
+  }
+});

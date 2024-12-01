@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
     { title: 'Listar de Proveedores', url: '/folder/listar-proveedores', icon: 'list' },
     { title: 'Crear Categoría', url: '/folder/crear-categoria', icon: 'layers' },
     { title: 'Listar Órdenes de Compra', url: '/folder/listar-ordenes', icon: 'receipt' },
-    { title: 'Dashboard', url: '/folder/main-dashboar', icon: 'speedometer' }, // NUEVA ENTRADA
+    { title: 'Listar Órdenes de Compra', url: '/folder/dashboard', icon: 'receipt' },
   ];
   
 
@@ -62,5 +62,7 @@ export class AppComponent implements OnInit {
         console.error('Error al obtener el perfil del usuario:', error);
       }
     );
+
+    
   }
 }

@@ -1,17 +1,39 @@
 import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
+import { Router } from '@angular/router';
+import { AuthGuard } from './auth.guard';
 
-import { authGuard } from './auth.guard';
-
-describe('authGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => authGuard(...guardParameters));
+describe('AuthGuard', () => {
+  let authGuard: AuthGuard;
+  let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    // Mock del router para capturar navegaciones
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+
+    TestBed.configureTestingModule({
+      providers: [
+        AuthGuard,
+        { provide: Router, useValue: routerSpy },
+      ],
+    });
+
+    authGuard = TestBed.inject(AuthGuard);
   });
 
-  it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+  it('debería crear el guard', () => {
+    expect(authGuard).toBeTruthy();
+  });
+
+  it('debería permitir acceso si el usuario está autenticado', () => {
+    localStorage.setItem('token', 'mock-token'); // Simula un token en localStorage
+    const result = authGuard.canActivate();
+    expect(result).toBeTrue();
+  });
+
+  it('debería bloquear acceso y redirigir a /login si el usuario no está autenticado', () => {
+    localStorage.removeItem('token'); // Elimina el token para simular un usuario no autenticado
+    const result = authGuard.canActivate();
+    expect(result).toBeFalse();
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
   });
 });

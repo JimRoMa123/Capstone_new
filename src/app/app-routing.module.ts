@@ -5,14 +5,15 @@ import { AuthGuard } from './guard/auth.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'folder/main-dashboar', 
+    redirectTo: 'folder/dashboard', 
     pathMatch: 'full'
   },
   {
-    path: 'folder/main-dashboar',
-    loadChildren: () => import('./folder/main-dashboar/main-dashboar.module').then(m => m.MainDashboarPageModule),
+    path: 'folder/dashboard',
+    loadChildren: () => import('./folder/dashboard/dashboard.module').then(m => m.DashboardPageModule),
     canActivate: [AuthGuard]
   },
+
   {
     path: 'folder/crear-producto',
     loadChildren: () => import('./folder/crear-producto/crear-producto.module').then(m => m.CrearProductoPageModule),

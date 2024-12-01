@@ -1,0 +1,85 @@
+
+  <ion-header [translucent]="true">
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Inicio</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+  <ion-grid class="ion-padding">
+    <!-- Tarjetas Resumen -->
+    <ion-row>
+      <ion-col size="6" >
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Total Ventas del Mes</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <h2>{{ ventasMes }}</h2>
+            <p>Ventas Realizadas</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6" >
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Total Proveedores</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <h2>{{ totalProveedores }}</h2>
+            <p>Proveedores Registrados</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="6" >
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Clientes con Más Compras</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ul >
+              <li *ngFor="let cliente of topClientes">
+                {{ cliente.nombre }} {{ cliente.apellido }} - {{ cliente.total_compras }} Compras
+              </li>
+            </ul>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6" >
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Proveedor Estrella</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <h2>{{ proveedorEstrella.nombre }}</h2>
+            <p>{{ proveedorEstrella.total_ventas }} Ventas</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Ventas Semanales -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Ventas Semanales</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="card">
+              <h3>Ventas Semanales</h3>
+              <canvas id="ventasSemanalesChart" width="500" height="300"></canvas>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  
+</ion-content>
