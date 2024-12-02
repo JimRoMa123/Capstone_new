@@ -194,8 +194,8 @@ app.post('/add-proveedor', async (req, res) => {
     giro_id,
     logo,
     rut,
-    latitud, // Nueva columna
-    longitud, // Nueva columna
+    latitud,
+    longitud, 
     user_id = 1,
   } = req.body;
 
@@ -210,9 +210,7 @@ app.post('/add-proveedor', async (req, res) => {
     !comuna_id ||
     !region_id ||
     !giro_id ||
-    !rut ||
-    !latitud || // Validar latitud
-    !longitud // Validar longitud
+    !rut 
   ) {
     return res.status(400).json({ message: 'Faltan datos obligatorios' });
   }
@@ -640,3 +638,34 @@ app.get('/proveedor-estrella', async (req, res) => {
     res.status(500).json({ message: 'Error al obtener proveedor estrella' });
   }
 });
+
+// Endpoint para obtener provincias por región
+app.get('/provincias/:regionId', async (req, res) => {
+  const { regionId } = req.params;
+  try {
+    const result = await pool.query(
+      'SELECT * FROM provincia WHERE region_id = $1 ORDER BY nombre',
+      [regionId]
+    );
+    res.status(200).json({ data: result.rows });
+  } catch (error) {
+    console.error('Error al obtener provincias:', error);
+    res.status(500).json({ message: 'Error al obtener provincias', error });
+  }
+});
+
+// Endpoint para obtener comunas por provincia
+app.get('/comunas/:provinciaId', async (req, res) => {
+  const { provinciaId } = req.params;
+  try {
+    const result = await pool.query(
+      'SELECT * FROM comuna WHERE provincia_id = $1 ORDER BY nombre',
+      [provinciaId]
+    );
+    res.status(200).json({ data: result.rows });
+  } catch (error) {
+    console.error('Error al obtener comunas:', error);
+    res.status(500).json({ message: 'Error al obtener comunas', error });
+  }
+});
+
