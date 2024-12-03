@@ -92,7 +92,7 @@ app.post('/login', async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT id FROM auth_user WHERE username = $1',
+      'SELECT id FROM user_customuser WHERE username = $1',
       [username]
     );
 
@@ -165,7 +165,7 @@ app.get('/table/:tableName', async (req, res) => {
 app.get('/profile', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT id, username, email FROM auth_user WHERE id = $1',
+      'SELECT id, username, email FROM user_customuser WHERE id = $1',
       [req.user.id]
     );
 
@@ -249,7 +249,7 @@ app.post('/add-proveedor', async (req, res) => {
 
 
 app.post('/add-proveedor_pedido', async (req, res) => {
-  const { fecha_pedido, total, estado, proveedor_id, productos } = req.body;
+  const { fecha_pedido, total, estado, proveedor_id, productos, user_id = 1 , created_by_id = 1 } = req.body;
 
   if (!fecha_pedido || !total || !estado || !proveedor_id || !productos) {
     return res.status(400).json({ message: 'Faltan datos obligatorios del pedido' });
@@ -258,8 +258,8 @@ app.post('/add-proveedor_pedido', async (req, res) => {
   try {
     // Crear el pedido en la tabla 'pedido' y obtener el pedido_id
     const pedidoResult = await pool.query(
-      'INSERT INTO pedido (fecha_pedido, total, estado, proveedor_id) VALUES ($1, $2, $3, $4) RETURNING id',
-      [fecha_pedido, total, estado, proveedor_id]
+      'INSERT INTO pedido (fecha_pedido, total, estado, proveedor_id, user_id, created_by_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+      [fecha_pedido, total, estado, proveedor_id, user_id, created_by_id]
     );
     const pedidoId = pedidoResult.rows[0].id; // Obtenemos el ID del pedido creado
 
@@ -267,14 +267,12 @@ app.post('/add-proveedor_pedido', async (req, res) => {
     for (const producto of productos) {
       const subtotal = producto.cantidad * producto.precio_unitario; // Calculamos el subtotal
       await pool.query(
-        'INSERT INTO detalle_pedido (cantidad, precio_unitario, subtotal, fecha_creacion, pedido_id, proveedor_id, producto_id) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+        'INSERT INTO detalle_pedido (cantidad, precio_unitario, pedido_id, producto_id, user_id) VALUES ($1, $2, $3, $4, $5)',
         [
           producto.cantidad, 
           producto.precio_unitario, 
-          subtotal, 
-          new Date(),
           pedidoId, 
-          proveedor_id, 
+          user_id,
           producto.producto_id
         ]
       );
@@ -467,7 +465,7 @@ app.get('/ventas', async (req, res) => {
              u.username AS usuario
       FROM venta v
       JOIN cliente c ON v.cliente_id = c.id
-      JOIN auth_user u ON v.user_id = u.id
+      JOIN user_customuser u ON v.user_id = u.id
       WHERE DATE_PART('month', v.fecha_creacion) = DATE_PART('month', CURRENT_DATE)
       AND DATE_PART('year', v.fecha_creacion) = DATE_PART('year', CURRENT_DATE)
     `);
