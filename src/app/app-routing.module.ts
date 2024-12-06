@@ -26,7 +26,6 @@ const routes: Routes = [
     path: 'folder/proveedor-ubicacion',
     loadChildren: () => import('./folder/proveedor-ubicacion/proveedor-ubicacion.module').then(m => m.ProveedorUbicacionPageModule),
     canActivate: [AuthGuard]
-
   },
   {
     path: 'folder/crear-categoria',
@@ -61,7 +60,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./folder/crear-bodega/crear-bodega.module').then((m) => m.CrearBodegaPageModule),
   },
-
   {
     path: 'folder/listar-bodegas',
     loadChildren: () =>
