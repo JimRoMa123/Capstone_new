@@ -18,6 +18,7 @@ export class CrearProductoPage implements OnInit {
   isCategoriaModalOpen = false;
   selectedProveedorName = '';
   selectedCategoriaName = '';
+  calculatedPrecioVenta = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -38,7 +39,6 @@ export class CrearProductoPage implements OnInit {
       cantidad: [null, [Validators.required, Validators.min(1)]],
       porc_ganancias: [null, [Validators.required, Validators.min(0)]],
       precio_compra: [null, [Validators.required, Validators.min(0.01)]],
-      precio_venta: [null, [Validators.required, Validators.min(0.01)]],
       fecha_creacion: [currentDate, Validators.required], // Fecha de creación inicializada automáticamente
     });
   }
@@ -90,6 +90,13 @@ export class CrearProductoPage implements OnInit {
     this.closeCategoriaModal();
   }
 
+  updatePrecioVenta() {
+    const precioCompra = this.productForm.get('precio_compra')?.value || 0;
+    const porcGanancias = this.productForm.get('porc_ganancias')?.value || 0;
+
+    this.calculatedPrecioVenta = precioCompra + (precioCompra * porcGanancias) / 100;
+  }
+
   async addProduct() {
     if (this.productForm.invalid) {
       const alert = await this.alertController.create({
@@ -101,9 +108,14 @@ export class CrearProductoPage implements OnInit {
       return;
     }
 
+    const formValue = {
+      ...this.productForm.value,
+      precio_venta: this.calculatedPrecioVenta, // Usar el precio calculado
+    };
+
     try {
       const response: any = await this.http
-        .post('http://localhost:3000/add-producto', this.productForm.value)
+        .post('http://localhost:3000/add-producto', formValue)
         .toPromise();
 
       const alert = await this.alertController.create({
@@ -118,6 +130,7 @@ export class CrearProductoPage implements OnInit {
       });
       this.selectedProveedorName = '';
       this.selectedCategoriaName = '';
+      this.calculatedPrecioVenta = 0;
     } catch (error) {
       console.error('Error al agregar producto:', error);
       const alert = await this.alertController.create({

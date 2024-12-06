@@ -55,7 +55,18 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./folder/login/login.module').then(m => m.LoginPageModule)
-  }
+  },
+  {
+    path: 'folder/crear-bodega',
+    loadChildren: () =>
+      import('./folder/crear-bodega/crear-bodega.module').then((m) => m.CrearBodegaPageModule),
+  },
+
+  {
+    path: 'folder/listar-bodegas',
+    loadChildren: () =>
+      import('./folder/listar-bodegas/listar-bodegas.module').then((m) => m.ListarBodegasPageModule),
+  },
 ];
 
 @NgModule({

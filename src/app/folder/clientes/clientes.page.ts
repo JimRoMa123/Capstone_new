@@ -55,6 +55,14 @@ closeFechaNacimientoModal() {
           buttons: ['OK']
         });
         await alert.present();
+        this.nombre= '',
+        this.apellido = '',
+        this.direccion='',
+        this.telefono = '',
+        this.email = '',
+        this.fecha_nacimiento = '',
+        this.genero = '',
+        this.rut = ''
       },
       async (error) => {
         const alert = await this.alertController.create({

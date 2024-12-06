@@ -3,38 +3,35 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Agregar Proveedor</ion-title>
+    <ion-title>Crear Bodega</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form (ngSubmit)="addProveedor()" #proveedorForm="ngForm">
+  <form (ngSubmit)="createBodega()">
+    <!-- Nombre -->
     <ion-item lines="full">
       <ion-label position="floating">Nombre</ion-label>
       <ion-input type="text" [(ngModel)]="nombre" name="nombre" required></ion-input>
     </ion-item>
 
+    <!-- Dirección -->
     <ion-item lines="full">
       <ion-label position="floating">Dirección</ion-label>
       <ion-input type="text" [(ngModel)]="direccion" name="direccion" required></ion-input>
     </ion-item>
 
+    <!-- Capacidad -->
     <ion-item lines="full">
-      <ion-label position="floating">Teléfono</ion-label>
-      <ion-input type="tel" [(ngModel)]="telefono" name="telefono" required></ion-input>
+      <ion-label position="floating">Capacidad</ion-label>
+      <ion-input type="number" [(ngModel)]="capacidad" name="capacidad" required></ion-input>
     </ion-item>
 
-    <ion-item lines="full">
-      <ion-label position="floating">Email</ion-label>
-      <ion-input type="email" [(ngModel)]="email" name="email" required></ion-input>
-    </ion-item>
-
-    <!-- Botón para abrir el modal de selección de región -->
-
+   
       <ion-button expand="block" color="tertiary" (click)="abrirModalRegiones()">
         Región: {{ nombreRegion || 'Seleccionar Región' }}
       </ion-button>
-
+    
 
     <!-- Modal de Selección de Región -->
     <ion-modal [isOpen]="isModalOpenRegion" (ionModalDidDismiss)="cerrarModal()">
@@ -51,7 +48,7 @@
           <ion-searchbar [(ngModel)]="searchRegion" name="searchRegion" (ionInput)="filtrarRegiones()" placeholder="Buscar región"></ion-searchbar>
           <ion-list>
             <ion-item *ngIf="regionesFiltradas.length === 0">No hay regiones disponibles</ion-item>
-            <ion-item *ngFor="let region of regionesFiltradas" (click)="seleccionarRegion(region)">
+            <ion-item *ngFor="let region of regiones" (click)="seleccionarRegion(region)">
               {{ region.nombre }}
             </ion-item>
           </ion-list>
@@ -60,11 +57,11 @@
     </ion-modal>
 
     <!-- Botón para abrir el modal de selección de provincia -->
-
+    
       <ion-button expand="block" color="tertiary" (click)="abrirModalProvincias()" [disabled]="!regionId">
         Provincia: {{ nombreProvincia || 'Seleccionar Provincia' }}
       </ion-button>
-
+    
 
     <!-- Modal de Selección de Provincia -->
     <ion-modal [isOpen]="isModalOpenProvincia" (ionModalDidDismiss)="cerrarModal()">
@@ -90,18 +87,14 @@
     </ion-modal>
 
     <!-- Botón para abrir el modal de selección de comuna -->
-
+ 
       <ion-button expand="block" color="tertiary" (click)="abrirModalComunas()" [disabled]="!provinciaId">
         Comuna: {{ nombreComuna || 'Seleccionar Comuna' }}
       </ion-button>
-
-
-      <ion-button expand="block" color="tertiary" (click)="abrirModalGiro()">
-        Giro: {{ nombreGiro || 'Seleccionar Giro' }}
-      </ion-button>
+ 
 
     <!-- Modal de Selección de Comuna -->
-    <ion-modal [isOpen]="isModalOpen" (ionModalDidDismiss)="cerrarModal()">
+    <ion-modal [isOpen]="isModalOpenComuna" (ionModalDidDismiss)="cerrarModal()">
       <ng-template>
         <ion-header>
           <ion-toolbar color="dark">
@@ -123,55 +116,9 @@
       </ng-template>
     </ion-modal>
 
-    <ion-modal [isOpen]="isModalOpenGiro" (ionModalDidDismiss)="cerrarModal()">
-      <ng-template>
-        <ion-header>
-          <ion-toolbar color="dark">
-            <ion-title>Seleccionar Giro</ion-title>
-            <ion-buttons slot="end">
-              <ion-button (click)="cerrarModal()" color="light">Cerrar</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-          <ion-searchbar
-            [(ngModel)]="searchGiro"
-            name="searchGiro"
-            (ionInput)="filtrarGiros()"
-            placeholder="Buscar giro"
-          ></ion-searchbar>
-          <ion-list>
-            <ion-item *ngFor="let giro of girosFiltrados" (click)="seleccionarGiro(giro)">
-              {{ giro.nombre }}
-            </ion-item>
-          </ion-list>
-        </ion-content>
-      </ng-template>
-    </ion-modal>
-
-    <!-- Resto del formulario -->
-    <ion-item lines="full">
-      <ion-label position="floating">Logo (URL)</ion-label>
-      <ion-input type="text" [(ngModel)]="logo" name="logo" required></ion-input>
-    </ion-item>
-
-    <ion-item lines="full">
-      <ion-label position="floating">RUT</ion-label>
-      <ion-input type="text" [(ngModel)]="rut" name="rut" required></ion-input>
-    </ion-item>
-
-    <ion-item lines="full">
-      <ion-label position="floating">Latitud</ion-label>
-      <ion-input type="text" [(ngModel)]="latitud" name="latitud" required></ion-input>
-    </ion-item>
-
-    <ion-item lines="full">
-      <ion-label position="floating">Longitud</ion-label>
-      <ion-input type="text" [(ngModel)]="longitud" name="longitud" required></ion-input>
-    </ion-item>
-
+    <!-- Botón para agregar la bodega -->
     <ion-button expand="block" type="submit" color="success">
-      Agregar Proveedor
+      Crear Bodega
     </ion-button>
   </form>
 </ion-content>

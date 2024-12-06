@@ -10,20 +10,26 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   
+  
   public providerPages = [
-    { title: 'Crear Producto', url: '/folder/crear-producto', icon: 'cube' },
-    { title: 'Crear proveedor', url: '/folder/proveedores', icon: 'person-add' },
-    { title: 'Listar de Proveedores', url: '/folder/listar-proveedores', icon: 'list' },
-    { title: 'Crear Categoría', url: '/folder/crear-categoria', icon: 'layers' },
-    { title: 'Listar Órdenes de Compra', url: '/folder/listar-ordenes', icon: 'receipt' },
-    { title: 'Listar Órdenes de Compra', url: '/folder/dashboard', icon: 'receipt' },
+    { title: 'Crear Producto', url: '/folder/crear-producto', icon: 'pricetag' }, 
+    { title: 'Crear Proveedor', url: '/folder/proveedores', icon: 'person-add' }, 
+    { title: 'Listar Proveedores', url: '/folder/listar-proveedores', icon: 'people' },
+    { title: 'Crear Categoría', url: '/folder/crear-categoria', icon: 'grid' }, 
+    { title: 'Listar Órdenes de Compra', url: '/folder/listar-ordenes', icon: 'cart' },
+    { title: 'Dashboard', url: '/folder/dashboard', icon: 'analytics' }, 
+  ];
+  
+  public clientPages = [
+    { title: 'Crear Cliente', url: '/folder/clientes', icon: 'person-add' }, 
+    { title: 'Listar Clientes', url: '/folder/listar-clientes', icon: 'people' }, 
+    { title: 'Listar Ventas del Mes', url: '/folder/listar-ventas', icon: 'cash' }, 
   ];
   
 
-  public clientPages = [
-    { title: 'Crear Cliente', url: '/folder/clientes', icon: 'person-add' },
-    { title: 'Listar Clientes', url: '/folder/listar-clientes', icon: 'people' },
-    { title: 'Listar ventas del mes', url: '/folder/listar-ventas', icon: 'tagprice' },
+  public bodegaPages = [
+    { title: 'Crear Bodega', url: '/folder/crear-bodega', icon: 'home' },
+    { title: 'Listar Bodegas', url: '/folder/listar-bodegas', icon: 'archive' },
   ];
 
   public labels = [''];
@@ -31,13 +37,15 @@ export class AppComponent implements OnInit {
 
   showProviderMenu = false;
   showClientMenu = false;
+  showBodegaMenu = false; // Nuevo control para el menú de bodegas
 
   constructor(private authService: AuthService, private router: Router) {}
+  
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']); // Redirige al login
   }
-  
+
   ngOnInit() {
     this.loadUserProfile();
   }
@@ -48,6 +56,10 @@ export class AppComponent implements OnInit {
 
   toggleClientMenu() {
     this.showClientMenu = !this.showClientMenu;
+  }
+
+  toggleBodegaMenu() { // Control para mostrar/ocultar el menú de bodegas
+    this.showBodegaMenu = !this.showBodegaMenu;
   }
 
   loadUserProfile() {
@@ -62,7 +74,5 @@ export class AppComponent implements OnInit {
         console.error('Error al obtener el perfil del usuario:', error);
       }
     );
-
-    
   }
 }

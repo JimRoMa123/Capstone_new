@@ -48,17 +48,28 @@
 
     <ion-item lines="full">
       <ion-label position="floating">Porcentaje de Ganancia</ion-label>
-      <ion-input formControlName="porc_ganancias" type="number"></ion-input>
+      <ion-input
+        formControlName="porc_ganancias"
+        type="number"
+        (ionChange)="updatePrecioVenta()"
+      ></ion-input>
     </ion-item>
 
     <ion-item lines="full">
       <ion-label position="floating">Precio de Compra</ion-label>
-      <ion-input formControlName="precio_compra" type="number"></ion-input>
+      <ion-input
+        formControlName="precio_compra"
+        type="number"
+        (ionChange)="updatePrecioVenta()"
+      ></ion-input>
     </ion-item>
 
     <ion-item lines="full">
       <ion-label position="floating">Precio de Venta</ion-label>
-      <ion-input formControlName="precio_venta" type="number"></ion-input>
+      <ion-input
+        [value]="calculatedPrecioVenta"
+        readonly
+      ></ion-input>
     </ion-item>
 
     <ion-button expand="block" type="submit" [disabled]="productForm.invalid" color="success">

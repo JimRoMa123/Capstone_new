@@ -265,15 +265,15 @@ app.post('/add-proveedor_pedido', async (req, res) => {
 
     // Insertar los productos en la tabla 'detalle_pedido' con el pedido_id
     for (const producto of productos) {
-      const subtotal = producto.cantidad * producto.precio_unitario; // Calculamos el subtotal
       await pool.query(
-        'INSERT INTO detalle_pedido (cantidad, precio_unitario, pedido_id, producto_id, user_id) VALUES ($1, $2, $3, $4, $5)',
+        'INSERT INTO detalle_pedido (cantidad, precio_unitario, pedido_id, producto_id, user_id, proveedor_id) VALUES ($1, $2, $3, $4, $5, $6)',
         [
           producto.cantidad, 
           producto.precio_unitario, 
           pedidoId, 
-          user_id,
-          producto.producto_id
+          producto.producto_id,
+          1,
+          proveedor_id
         ]
       );
     }
@@ -414,17 +414,17 @@ app.get('/detalle-pedido/:pedidoId', async (req, res) => {
 });
 
 app.post('/add-venta', async (req, res) => {
-  const { impuesto, metodo_pago, estado, cliente_id, user_id, productos } = req.body;
-
-  if (!impuesto || !metodo_pago || !estado || !cliente_id || !user_id || !productos || productos.length === 0) {
+  const { metodo_pago, estado, cliente_id, user_id, productos } = req.body;
+  const impuesto = 19;
+  if ( !metodo_pago || !estado || !cliente_id || !user_id || !productos || productos.length === 0) {
     return res.status(400).json({ message: 'Faltan datos obligatorios para crear la venta.' });
   }
 
   try {
     // Insertar la venta en la tabla `venta`
     const ventaResult = await pool.query(
-      'INSERT INTO venta (impuesto, metodo_pago, estado, cliente_id, fecha_creacion, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
-      [impuesto, metodo_pago, estado, cliente_id, new Date(), user_id]
+      'INSERT INTO venta ( metodo_pago, estado, cliente_id, fecha_creacion, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+      [ metodo_pago, estado, cliente_id, new Date(), user_id]
     );
 
     const ventaId = ventaResult.rows[0].id;
@@ -436,7 +436,7 @@ app.post('/add-venta', async (req, res) => {
       const totalConImpuesto = (subtotal - descuentoAplicado) * (1 + impuesto / 100); // Total con impuesto
 
       await pool.query(
-        'INSERT INTO detalle_venta (cantidad, precio_unitario, descuento, producto_id, venta_id, user_id, total_venta) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+        'INSERT INTO detalle_venta (cantidad, precio_unitario, descuento, producto_id, venta_id, user_id, total_venta, fecha_creacion) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
         [
           producto.cantidad,
           producto.precio_unitario,
@@ -444,7 +444,8 @@ app.post('/add-venta', async (req, res) => {
           producto.producto_id,
           ventaId,
           user_id,
-          totalConImpuesto.toFixed(2), // Redondear a 2 decimales
+          totalConImpuesto.toFixed(2),
+          new Date()
         ]
       );
     }
@@ -460,7 +461,7 @@ app.post('/add-venta', async (req, res) => {
 app.get('/ventas', async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT v.id, v.impuesto, v.metodo_pago, v.estado, v.fecha_creacion, 
+      SELECT v.id,  v.metodo_pago, v.estado, v.fecha_creacion, 
              c.nombre AS cliente_nombre, c.apellido AS cliente_apellido, 
              u.username AS usuario
       FROM venta v
@@ -527,6 +528,35 @@ app.put('/update-proveedor/:id', async (req, res) => {
   } catch (error) {
     console.error('Error al actualizar proveedor:', error);
     res.status(500).json({ message: 'Error al actualizar proveedor', error });
+  }
+});
+// Endpoint para actualizar un cliente
+app.put('/update-cliente/:id', async (req, res) => {
+  const { id } = req.params;
+  const { nombre, apellido, direccion, telefono, email } = req.body;
+
+  // Validar datos obligatorios
+  if (!nombre || !apellido || !direccion || !telefono || !email) {
+    return res.status(400).json({ message: 'Faltan datos obligatorios' });
+  }
+
+  try {
+    // Actualizar el cliente en la base de datos
+    const result = await pool.query(
+      `UPDATE cliente 
+       SET nombre = $1, apellido = $2, direccion = $3, telefono = $4, email = $5
+       WHERE id = $6 RETURNING *`,
+      [nombre, apellido, direccion, telefono, email, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Cliente no encontrado' });
+    }
+
+    res.status(200).json({ message: 'Cliente actualizado', cliente: result.rows[0] });
+  } catch (error) {
+    console.error('Error al actualizar cliente:', error);
+    res.status(500).json({ message: 'Error al actualizar cliente', error });
   }
 });
 
@@ -667,3 +697,75 @@ app.get('/comunas/:provinciaId', async (req, res) => {
   }
 });
 
+app.post('/add-bodega', async (req, res) => {
+  const {
+    nombre,
+    direccion,
+    capacidad,
+    cantidad_art,
+    fecha_creacion,
+    comuna_id,
+    provincia_id,
+    region_id,
+    user_id= 1,
+  } = req.body;
+
+  if (
+    !nombre ||
+    !direccion ||
+    !capacidad ||
+    !cantidad_art ||
+    !comuna_id ||
+    !provincia_id ||
+    !region_id ||
+    !user_id
+  ) {
+    return res.status(400).json({ message: 'Faltan datos obligatorios' });
+  }
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO bodega (nombre, direccion, capacidad, cantidad_art, fecha_creacion, comuna_id, provincia_id, region_id, user_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      [nombre, direccion, capacidad, cantidad_art, fecha_creacion, comuna_id, provincia_id, region_id, user_id]
+    );
+    res.status(201).json({ message: 'Bodega creada exitosamente', bodega: result.rows[0] });
+  } catch (error) {
+    console.error('Error al crear la bodega:', error);
+    res.status(500).json({ message: 'Error al crear la bodega', error });
+  }
+});
+
+// Ejemplo en Node.js/Express
+app.get('/bodegas', async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT * FROM bodega ORDER BY nombre',
+    );
+    res.status(200).json({ data: result.rows });
+  } catch (error) {
+    console.error('Error al obtener comunas:', error);
+    res.status(500).json({ message: 'Error al obtener comunas', error });
+  }
+});
+
+// Endpoint para obtener productos de una bodega específica
+app.get('/productos/bodega/:bodegaId', async (req, res) => {
+  const { bodegaId } = req.params;
+
+  try {
+    const result = await pool.query(
+      `SELECT * FROM producto WHERE bodega_id = $1 ORDER BY nombre`,
+      [bodegaId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron productos para esta bodega.' });
+    }
+
+    res.status(200).json({ message: 'Productos obtenidos exitosamente', data: result.rows });
+  } catch (error) {
+    console.error('Error al obtener productos de la bodega:', error);
+    res.status(500).json({ message: 'Error al obtener productos de la bodega', error });
+  }
+});

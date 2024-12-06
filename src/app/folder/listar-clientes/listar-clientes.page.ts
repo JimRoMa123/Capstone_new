@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientesService } from '../../services/clientes.service';
 import { HttpClient } from '@angular/common/http';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-listar-clientes',
@@ -17,8 +18,9 @@ export class ListarClientesPage implements OnInit {
   impuesto: number = 19;
   metodoPago: string = 'Efectivo';
   estado: string = 'Pendiente';
+  isEditarModalOpen = false;
 
-  constructor(private clientesService: ClientesService, private http: HttpClient) {}
+  constructor(private clientesService: ClientesService, private http: HttpClient,     private alertController: AlertController  ) {}
 
   ngOnInit() {
     this.cargarClientes();
@@ -37,6 +39,16 @@ export class ListarClientesPage implements OnInit {
         this.isLoading = false;
       }
     );
+  }
+
+  abrirEditarModal(cliente: any) {
+    this.clienteSeleccionado = { ...cliente }; // Clona el objeto para evitar modificar directamente
+    this.isEditarModalOpen = true;
+  }
+
+  cerrarEditarModal() {
+    this.isEditarModalOpen = false;
+    this.clienteSeleccionado = null;
   }
 
   cargarProductos() {
@@ -93,20 +105,53 @@ export class ListarClientesPage implements OnInit {
       cantidad: cantidadProductos,
     };
   }
+
+  guardarCambiosCliente() {
+    const ClienteActualizado = this.clienteSeleccionado;
+    this.http
+      .put(`http://localhost:3000/update-cliente/${this.clienteSeleccionado.id}`, ClienteActualizado)
+      .subscribe(
+        async (response: any) => {
+          // Actualiza la lista de proveedores
+          const index = this.clientes.findIndex(p => p.id === ClienteActualizado.id);
+          if (index !== -1) {
+            this.clientes[index] = ClienteActualizado;
+          }
+  
+          const alert = await this.alertController.create({
+            header: 'Éxito',
+            message: 'Proveedor actualizado correctamente.',
+            buttons: ['OK']
+          });
+          await alert.present();
+  
+          this.cerrarEditarModal();
+        },
+        async (error) => {
+          const alert = await this.alertController.create({
+            header: 'Error',
+            message: 'Hubo un error al actualizar el proveedor.',
+            buttons: ['OK']
+          });
+          await alert.present();
+          console.error('Error al actualizar proveedor:', error);
+        }
+      );
+    
+  }
   
 
   realizarVenta() {
     const venta = {
-      impuesto: 19, // Fijo, no editable
       metodo_pago: this.metodoPago,
       estado: this.estado,
       cliente_id: this.clienteSeleccionado.id,
-      user_id: 1, // Usuario fijo por ahora
+      user_id: 1, 
       productos: this.productosSeleccionados.map((p) => ({
         producto_id: p.id,
         cantidad: p.cantidadSeleccionada,
         precio_unitario: p.precio_venta,
-        descuento: p.descuento || 0, // Si no hay descuento, es 0
+        descuento: p.descuento || 0, 
       })),
     };
   
@@ -116,6 +161,7 @@ export class ListarClientesPage implements OnInit {
       (response: any) => {
         alert('Venta realizada exitosamente.');
         this.cerrarModal();
+
       },
       (error) => {
         console.error('Error al realizar la venta:', error);

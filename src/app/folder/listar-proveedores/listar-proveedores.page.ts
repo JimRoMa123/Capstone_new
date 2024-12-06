@@ -69,8 +69,6 @@ cerrarModalEdicion() {
 
 guardarCambios() {
   const proveedorActualizado = this.proveedorSeleccionado;
-
-  // Realiza la solicitud HTTP para actualizar los datos
   this.http.put(`http://localhost:3000/update-proveedor/${proveedorActualizado.id}`, proveedorActualizado)
     .subscribe(
       async (response: any) => {

@@ -140,10 +140,7 @@ ion-button[color="success"] {
   --color: #ffffff;
 }
 
-ion-button[color="success"]:hover {
-  --background: linear-gradient(135deg, #388e3c, #43a047);
-  box-shadow: 0px 6px 14px rgba(76, 175, 80, 0.4);
-}
+
 
 /* Responsive: Ajustes para pantallas pequeñas */
 @media (max-width: 768px) {

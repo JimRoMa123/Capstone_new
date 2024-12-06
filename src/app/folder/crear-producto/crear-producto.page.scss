@@ -1,0 +1,107 @@
+/* Centrar el formulario */
+ion-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #f4f4f9; /* Fondo suave */
+  }
+  
+  /* Estilo del formulario */
+  form {
+    width: 100%;
+    max-width: 400px; /* Limitar ancho del formulario */
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Estilo de los ítems del formulario */
+  ion-item {
+    --background: #ffffff;
+    --border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Botones estilizados */
+  ion-button {
+    --background: linear-gradient(90deg, #4caf50, #81c784);
+    --border-radius: 50px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease-in-out;
+    margin-top: 15px;
+  }
+  
+  ion-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 10px rgba(76, 175, 80, 0.4);
+  }
+  
+  /* Modal */
+  ion-modal {
+    --background: #f9f9f9;
+  }
+  
+  /* Header de los modales */
+  ion-modal ion-toolbar {
+    --background: linear-gradient(90deg, #673ab7, #9575cd);
+    --color: #ffffff;
+  }
+  
+  /* Listas dentro de modales */
+  ion-list {
+    margin-top: 10px;
+  }
+  
+  ion-item[button] {
+    --background: #f3e5f5;
+    --color: #5e35b1;
+    margin: 5px 0;
+    border-radius: 8px;
+  }
+  
+  ion-item[button]:hover {
+    background-color: #d1c4e9;
+    transition: 0.2s;
+  }
+  
+  /* Inputs */
+  ion-input {
+    font-size: 16px;
+  }
+  
+  ion-input::placeholder {
+    color: #9e9e9e;
+    font-style: italic;
+  }
+  
+  /* Etiquetas */
+  ion-label {
+    font-weight: bold;
+    color: #616161;
+  }
+  
+  /* Título */
+  ion-header ion-title {
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+  
+  /* Texto de selección en botones */
+  ion-text.ion-text-end {
+    font-style: italic;
+    color: #5c6bc0;
+  }
+  
+  /* Precio de Venta (readonly) */
+  ion-input[readonly] {
+    --background: #e8f5e9;
+    --color: #2e7d32;
+    font-weight: bold;
+  }
+  

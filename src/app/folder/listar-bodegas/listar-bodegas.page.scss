@@ -1,0 +1,109 @@
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .no-ventas {
+    text-align: center;
+    margin-top: 20px;
+    color: gray;
+  }
+  /* Centrado general */
+ion-content {
+    --background: #f8f9fa; /* Fondo claro */
+    text-align: center;
+  }
+  
+  /* Títulos y etiquetas */
+  h2, h3, p {
+    margin: 0.5rem 0;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    color: #343a40; /* Tono oscuro */
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+    color: #495057; /* Tono intermedio */
+  }
+  
+  p {
+    color: #6c757d; /* Tono claro */
+  }
+  
+  /* Lista de ventas */
+  .ventas-lista {
+    margin: 1rem auto;
+    padding: 1rem;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Modal */
+  .detalle-modal {
+    --background: #ffffff;
+    --box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+  }
+  
+  /* Botones */
+  ion-button {
+    --border-radius: 10px;
+    margin: 1rem auto;
+    padding: 0.5rem 1rem;
+  }
+  
+
+  
+  ion-item {
+    text-align: left;
+    margin: 0.5rem 0;
+  }
+
+  /* Fondo del contenido */
+ion-content {
+    --background: #f8f9fa; /* Fondo claro */
+  }
+  
+  /* Separación y estilo general para las bodegas */
+  .bodega-item {
+    margin-bottom: 10px; /* Espaciado entre ítems */
+    border: 1px solid #ddd; /* Borde ligero */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+  }
+  
+
+  
+  /* Estilo del modal */
+  .detalle-modal {
+    --background: #ffffff; /* Fondo blanco */
+    border-radius: 12px; /* Bordes redondeados */
+    padding: 16px; /* Espaciado interno */
+  }
+  
+  /* Ítems de los productos */
+  .producto-item {
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+
+  
+  /* Mensaje cuando no hay productos */
+  .no-ventas {
+    text-align: center;
+    margin-top: 20px;
+    color: gray;
+    font-style: italic;
+  }
+  
+  

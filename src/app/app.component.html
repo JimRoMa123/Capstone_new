@@ -39,11 +39,27 @@
             </ion-menu-toggle>
           </div>
 
+          <ion-item button (click)="toggleBodegaMenu()" lines="none">
+            <ion-icon slot="start" name="home"></ion-icon>
+            <ion-label>Bodegas</ion-label>
+            <ion-icon slot="end" [name]="showBodegaMenu ? 'chevron-up' : 'chevron-down'"></ion-icon>
+          </ion-item>
+          <div [ngClass]="{'expanded': showBodegaMenu, 'collapsed': !showBodegaMenu}" class="expandable-content">
+            <ion-menu-toggle auto-hide="false" *ngFor="let b of bodegaPages">
+              <ion-item routerDirection="root" [routerLink]="[b.url]" lines="none" detail="false" routerLinkActive="selected">
+                <ion-icon slot="start" [name]="b.icon"></ion-icon>
+                <ion-label>{{ b.title }}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </div>
         </ion-list>
-        <ion-item (click)="logout()">
-          <ion-icon name="log-out-outline" slot="start"></ion-icon>
-          <ion-label>Cerrar Sesión</ion-label>
-        </ion-item>
+      
+        <ion-footer class="logout-footer">
+          <ion-item (click)="logout()" lines="none" detail="false" class="logout-item">
+            <ion-icon name="log-out-outline" slot="start"></ion-icon>
+            <ion-label>Cerrar Sesión</ion-label>
+          </ion-item>
+        </ion-footer>
         
        
       </ion-content>

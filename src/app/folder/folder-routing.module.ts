@@ -60,6 +60,14 @@ const routes: Routes = [
   {
     path: 'dashboard',
     loadChildren: () => import('./dashboard/dashboard.module').then( m => m.DashboardPageModule)
+  },
+  {
+    path: 'crear-bodega',
+    loadChildren: () => import('./crear-bodega/crear-bodega.module').then( m => m.CrearBodegaPageModule)
+  },
+  {
+    path: 'listar-bodegas',
+    loadChildren: () => import('./listar-bodegas/listar-bodegas.module').then( m => m.ListarBodegasPageModule)
   }
 ];
 
