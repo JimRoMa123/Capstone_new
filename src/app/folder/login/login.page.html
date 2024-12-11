@@ -1,22 +1,32 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Login</ion-title>
-  </ion-toolbar>
+  
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item>
-      <ion-label position="floating">Username</ion-label>
-      <ion-input [(ngModel)]="username" type="text"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Password</ion-label>
-      <ion-input [(ngModel)]="password" type="password"></ion-input>
-    </ion-item>
-  </ion-list>
   
-  <ion-button expand="full" (click)="onLogin()">Iniciar sesión</ion-button>
+  <div class="grid-container">
+    
+    <div class="centered-container">
 
-  <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+      <div class="logo">
+        <img src="../../../assets/icon/icono.png" alt="Logo">
+      </div>
+
+      <!-- Formulario de inicio de sesión -->
+      <div class="form-container">
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">Username</ion-label>
+            <ion-input [(ngModel)]="username" type="text"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Password</ion-label>
+            <ion-input [(ngModel)]="password" type="password"></ion-input>
+          </ion-item>
+          <ion-button expand="block" (click)="onLogin()">Iniciar sesión</ion-button>
+        </ion-list>
+        <p *ngIf="errorMessage">{{ errorMessage }}</p>
+      </div>
+    </div>
+  </div>
 </ion-content>

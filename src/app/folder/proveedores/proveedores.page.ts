@@ -127,7 +127,6 @@ export class ProveedoresPage implements OnInit {
   // Seleccionar elementos
   seleccionarRegion(region: any) {
     this.regionId = region.codigo_region;
-    console.log(this.regionId)
     this.nombreRegion = region.nombre;
     this.cargarProvincias(region.codigo_region);
     this.nombreProvincia = '';
@@ -181,6 +180,44 @@ export class ProveedoresPage implements OnInit {
     this.isModalOpenRegion = false;
     this.isModalOpenProvincia = false;
     this.isModalOpenGiro = false;
+  }
+
+  obtenerUbicacion() {
+    // Construimos la dirección completa a geocodificar
+    // Incluimos direccion, comuna, provincia y región
+    const fullAddress = `${this.direccion}, ${this.nombreComuna}, ${this.nombreProvincia}, ${this.nombreRegion}`;
+    const query = encodeURIComponent(fullAddress);
+
+    const accessToken = 'pk.eyJ1IjoiamFpcm9kcmlndWV6bSIsImEiOiJjbTQwanp0ZTQwNnJxMm1wcjd5bzhxZnduIn0.iVDBeD4K6obl8DxvGVZQcg';
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${accessToken}`;
+
+    this.http.get(url).subscribe((response: any) => {
+      if (response.features && response.features.length > 0) {
+        // El centro (center) es un arreglo [longitud, latitud]
+        const [lng, lat] = response.features[0].center;
+        this.latitud = lat.toString();
+        this.longitud = lng.toString();
+
+        this.alertController.create({
+          header: 'Ubicación Obtenida',
+          message: `Latitud: ${this.latitud}, Longitud: ${this.longitud}`,
+          buttons: ['OK']
+        }).then(alert => alert.present());
+      } else {
+        this.alertController.create({
+          header: 'Error',
+          message: 'No se pudo obtener coordenadas para esa dirección.',
+          buttons: ['OK']
+        }).then(alert => alert.present());
+      }
+    }, error => {
+      console.error('Error en la geocodificación directa:', error);
+      this.alertController.create({
+        header: 'Error',
+        message: 'Hubo un problema al obtener las coordenadas.',
+        buttons: ['OK']
+      }).then(alert => alert.present());
+    });
   }
 
   // Agregar proveedor
@@ -242,4 +279,9 @@ export class ProveedoresPage implements OnInit {
     this.latitud = '';
     this.longitud = '';
   }
+
+  // ---------------------------
+  // Función para obtener lat/long desde dirección
+  // ---------------------------
+
 }

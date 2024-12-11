@@ -1,161 +1,323 @@
-.proveedores-content {
-  background-color: #f9f9f9;
+/* General */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* Contenido general */
+ion-content {
+  --background: #f4f4f9; /* Fondo claro */
+  padding: 16px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-bottom: 1rem;
+  flex-direction: column; /* Organiza los elementos en columna */
+  gap: 16px; /* Espaciado uniforme entre elementos */
 }
 
-.loading-container {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.proveedor-item {
-  margin: 0.5rem 1rem;
-  padding: 1rem;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-}
-
-.proveedor-item ion-button {
-  margin-top: 0.5rem;
-  width: 100%;
-}
-
-.orden-modal .modal-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem;
-}
-
-.divider {
-  width: 100%;
-  height: 1px;
-  background-color: #e0e0e0;
-  margin: 1rem 0;
-}
-
-.modal-content ion-button {
-  margin: 1rem 0;
-}
-
+/* Lista de clientes */
 ion-list {
-  width: 100%;
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 1rem;
-}
-
-.product-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.product-item ion-checkbox {
-  margin-right: 1rem;
-}
-ion-list {
-  --ion-padding-start: 0;
+  margin-top: 16px;
 }
 
 ion-item {
-  align-items: center;
-  text-align: left;
+  --background: #ffffff; /* Fondo blanco */
+  border: 1px solid #e0e0e0; /* Borde claro */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  margin-bottom: 12px; /* Espaciado entre elementos */
+  padding: 12px;
 }
 
-ion-input {
-  margin-left: 1rem;
-  max-width: 100px;
-}
-/* Centrar el contenido principal */
-.content-centered {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Estilo para la lista de pedidos */
-.pedido-list {
+ion-item-divider {
+  margin: 16px 0;
+  background-color: #e0e0e0; /* Color del separador */
+  height: 1px;
   width: 100%;
-  max-width: 600px;
-  margin: auto;
 }
 
-.pedido-titulo {
+/* Encabezados y etiquetas */
+ion-label h2 {
+  font-size: 18px;
   font-weight: bold;
   color: #333;
+  margin: 0;
 }
 
-/* Estilo para el modal de detalle */
-.modal-centered {
-  --ion-background-color: #ffffff;
-  --border-radius: 12px;
-  padding: 1rem;
+ion-label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+  display: block; /* Asegura que las etiquetas sean bloques */
 }
 
-
+/* Botones en columna */
 .botones-en-columna {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px; /* Espacio entre los botones */
-  margin-top: 10px;
+  flex-direction: column; /* Organiza los botones verticalmente */
+  gap: 8px; /* Espacio entre los botones */
+  align-items: flex-start; /* Alinea los botones a la izquierda */
 }
 
 .boton-hacer-pedido,
 .boton-editar {
-  --background: var(--ion-color-primary);
-  --color: white;
-  --border-radius: 8px; /* Bordes más suaves */
-  --padding: 10px 20px; /* Ajusta el relleno */
-  font-weight: bold;
-  font-size: 14px; /* Asegúrate de que el texto sea claro */
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-size: 14px;
+  width: 100%; /* Los botones ocupan todo el ancho del contenedor */
 }
 
 .boton-hacer-pedido {
-  --background: #4caf50; /* Verde */
+  --background: #5cb85c;
+  --background-activated: #4cae4c;
 }
 
 .boton-editar {
-  --background: #3f51b5; /* Azul */
+  --background: #0275d8;
+  --background-activated: #025aa5;
 }
 
-/* Animación hover */
-.boton-hacer-pedido:hover,
-.boton-editar:hover {
-  transform: scale(1.02); /* Un pequeño zoom */
-  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
+/* Modal */
+ion-modal {
+  --background: #ffffff; /* Fondo blanco para el modal */
+  border-radius: 12px;
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2); /* Sombra para el modal */
 }
 
-/* Texto en los botones */
-.boton-hacer-pedido ion-icon,
-.boton-editar ion-icon {
-  font-size: 18px;
-  margin-right: 8px; /* Espacio entre el ícono y el texto */
+
+
+
+/* Formulario dentro del modal */
+ion-item {
+  margin-bottom: 16px; /* Espacio entre campos */
 }
 
-ion-label {
-  font-size: 16px; /* Tamaño de fuente claro */
-  font-weight: 500; /* Peso medio para claridad */
-  color: #333; /* Asegúrate de un buen contraste con el fondo */
+/* Inputs */
+ion-input,
+ion-select {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --background: #f9f9f9; /* Fondo claro */
+  border: 1px solid #ccc; /* Borde gris */
+  border-radius: 6px;
+  height: 40px;
 }
 
-.direccion {
+/* Productos seleccionados */
+.productos-seleccionados ion-item {
+  margin-bottom: 16px; /* Espaciado entre productos */
+  padding: 16px;
+  border-radius: 8px; /* Bordes redondeados */
+  background-color: #ffffff; /* Fondo blanco */
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+/* Campos inline (Cantidad y Descuento) */
+.inline-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 8px 0;
+}
+
+.inline-field label {
   font-size: 14px;
-  color: #7173f5; /* Asegúrate de que este color tenga suficiente contraste */
-  text-decoration: underline; /* Mejor visibilidad */
+  font-weight: bold;
+  color: #333;
 }
 
+.inline-field ion-input {
+  flex: 1;
+  margin-left: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  --background: #f9f9f9;
+}
+
+/* Totales */
+ion-item:last-child {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  padding: 12px;
+  border-radius: 6px;
+  background-color: #e9ecef; /* Fondo diferenciado */
+}
+
+/* Botón de Confirmar Venta */
+ion-button.confirmar-venta {
+  --background: #5cb85c; /* Color verde */
+  --background-activated: #4cae4c;
+  color: #ffffff; /* Texto blanco */
+  font-size: 16px; /* Texto más grande */
+  font-weight: bold;
+  padding: 12px; /* Espaciado interno */
+  border-radius: 8px; /* Bordes redondeados */
+  margin-top: 16px; /* Espacio superior */
+  width: 100%; /* Ocupa todo el ancho */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
+}
+
+/* Mensaje cuando no hay clientes */
+.no-clientes ion-label {
+  font-size: 16px;
+  color: #999;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Spinner de carga */
+.loading-container {
+  margin-top: 50px;
+  text-align: center;
+  color: #666;
+}
+
+.loading-container p {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+
+/* General */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* Modal */
+ion-modal {
+  --background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2); /* Sombra para modal */
+}
+
+
+
+
+
+/* Contenido del modal */
+ion-content {
+  --background: #f4f4f9; /* Fondo claro */
+  display: flex;
+  flex-direction: column; /* Organiza elementos en columna */
+  gap: 16px; /* Espacio uniforme entre los elementos */
+  padding: 16px;
+}
+
+/* Elementos dentro del formulario */
+ion-item {
+  --background: #ffffff;
+  border: 1px solid #e0e0e0; /* Borde claro */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  padding: 12px; /* Espaciado interno */
+}
+
+/* Labels y campos de entrada */
+ion-label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+ion-input, ion-select {
+  --background: #f9f9f9; /* Fondo claro */
+  border: 1px solid #ccc; /* Borde gris */
+  border-radius: 6px;
+  height: 40px; /* Altura uniforme */
+  padding: 8px; /* Espaciado interno */
+}
+
+/* Inline fields (Cantidad y Descuento) */
+.inline-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 8px 0;
+}
+
+.inline-field label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.inline-field ion-input {
+  flex: 1;
+  margin-left: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  --background: #f9f9f9;
+}
+
+/* Totales */
+.totales {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #f9f9f9;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.totales p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+/* Botón de Confirmar Venta */
+ion-button.confirmar-venta {
+  --background: #5cb85c; /* Color verde */
+  --background-activated: #4cae4c;
+  color: #ffffff; /* Texto blanco */
+  font-size: 16px; /* Texto más grande */
+  font-weight: bold;
+  padding: 12px; /* Espaciado interno */
+  border-radius: 8px; /* Bordes redondeados */
+  width: 100%; /* Ocupa todo el ancho */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
+  margin-top: 16px; /* Espacio superior */
+}
+
+/* Botones dentro del formulario */
+.botones {
+  display: flex;
+  flex-direction: column; /* Botones en columna */
+  gap: 12px; /* Espacio entre botones */
+}
+
+.botones ion-button {
+  width: 100%; /* Botones ocupan el ancho completo */
+}
+
+/* Spinner de carga */
+.loading-container {
+  text-align: center;
+  margin-top: 50px;
+  color: #666;
+}
+
+.loading-container p {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+/* Mensaje cuando no hay clientes */
+.no-clientes ion-label {
+  font-size: 16px;
+  color: #999;
+  text-align: center;
+  margin-top: 20px;
+}

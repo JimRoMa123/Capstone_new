@@ -159,6 +159,9 @@
       <ion-label position="floating">RUT</ion-label>
       <ion-input type="text" [(ngModel)]="rut" name="rut" required></ion-input>
     </ion-item>
+    <ion-button expand="block" color="tertiary" (click)="obtenerUbicacion()">
+      Obtener Lat/Long de la dirección
+    </ion-button>
 
     <ion-item lines="full">
       <ion-label position="floating">Latitud</ion-label>
@@ -175,3 +178,6 @@
     </ion-button>
   </form>
 </ion-content>
+
+
+

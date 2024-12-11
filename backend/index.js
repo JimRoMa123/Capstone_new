@@ -249,7 +249,7 @@ app.post('/add-proveedor', async (req, res) => {
 
 
 app.post('/add-proveedor_pedido', async (req, res) => {
-  const { fecha_pedido, total, estado, proveedor_id, productos, user_id = 1 , created_by_id = 1 } = req.body;
+  const { fecha_pedido, total, estado, proveedor_id, productos, user_id = 1, created_by_id = 1, direccion_entrega_id } = req.body;
 
   if (!fecha_pedido || !total || !estado || !proveedor_id || !productos) {
     return res.status(400).json({ message: 'Faltan datos obligatorios del pedido' });
@@ -258,7 +258,7 @@ app.post('/add-proveedor_pedido', async (req, res) => {
   try {
     // Crear el pedido en la tabla 'pedido' y obtener el pedido_id
     const pedidoResult = await pool.query(
-      'INSERT INTO pedido (fecha_pedido, total, estado, proveedor_id, user_id, created_by_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+      'INSERT INTO pedido (fecha_creacion, total, estado, proveedor_id, user_id, created_by_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
       [fecha_pedido, total, estado, proveedor_id, user_id, created_by_id]
     );
     const pedidoId = pedidoResult.rows[0].id; // Obtenemos el ID del pedido creado
@@ -266,14 +266,16 @@ app.post('/add-proveedor_pedido', async (req, res) => {
     // Insertar los productos en la tabla 'detalle_pedido' con el pedido_id
     for (const producto of productos) {
       await pool.query(
-        'INSERT INTO detalle_pedido (cantidad, precio_unitario, pedido_id, producto_id, user_id, proveedor_id) VALUES ($1, $2, $3, $4, $5, $6)',
+        'INSERT INTO detalle_pedido (cantidad, precio_unitario, pedido_id, producto_id, user_id, proveedor_id, fecha_creacion, direccion_entrega_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
         [
           producto.cantidad, 
           producto.precio_unitario, 
           pedidoId, 
           producto.producto_id,
           1,
-          proveedor_id
+          proveedor_id,
+          fecha_pedido,
+          direccion_entrega_id // Utilizamos la bodega seleccionada enviada desde el front
         ]
       );
     }
@@ -288,14 +290,14 @@ app.post('/add-proveedor_pedido', async (req, res) => {
 app.post('/add-categoria', async (req, res) => {
   const { nombre, descripcion, img, fecha_creacion,  user_id =1} = req.body;
 
-  if (!nombre || !descripcion || !img || !fecha_creacion || !user_id  ) {
+  if (!nombre || !descripcion || !fecha_creacion || !user_id  ) {
     return res.status(400).json({ message: 'Faltan datos obligatorios del pedido' });
   }
 
   try {
     const result = await pool.query(
-      'INSERT INTO categoria (nombre, descripcion, img, fecha_creacion, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [nombre, descripcion, img, fecha_creacion,  user_id]
+      'INSERT INTO categoria (nombre, descripcion,  fecha_creacion, user_id) VALUES ($1, $2, $3, $4) RETURNING *',
+      [nombre, descripcion, fecha_creacion,  user_id]
     );
 
     res.status(201).json({ message: 'categoria agregado correctamente', categoria: result.rows[0] });
@@ -317,11 +319,12 @@ app.post('/add-producto', async (req, res) => {
     porc_ganancias,
     precio_compra,
     precio_venta,
+    bodega_id, // Asegúrate de recibir este campo
   } = req.body;
 
   // Campos fijos
   const user_id = 1;
-  const bodega_id = 1;
+  const iva = 19
   const fecha_creacion = new Date(); 
   if (
     !nombre ||
@@ -341,12 +344,12 @@ app.post('/add-producto', async (req, res) => {
   try {
     const result = await pool.query(
       `INSERT INTO producto 
-      (nombre, descripcion, img, sku, proveedor_id, categoria_id, cantidad, porc_ganancias, 
+      (nombre,iva, img, sku, proveedor_id, categoria_id, cantidad, porc_ganancias, 
       fecha_creacion, bodega_id, user_id, precio_compra, precio_venta) 
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`,
       [
         nombre,
-        descripcion,
+        iva,
         img,
         sku,
         proveedor_id,
@@ -385,7 +388,7 @@ app.get('/productos-por-proveedor/:proveedorId', async (req, res) => {
 app.get('/pedidos', async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT p.id, p.total, p.estado, p.fecha_pedido, prov.nombre AS proveedor_nombre
+      SELECT p.id, p.total, p.estado, p.fecha_creacion, prov.nombre AS proveedor_nombre
       FROM pedido p
       JOIN proveedor prov ON p.proveedor_id = prov.id
     `);
@@ -481,7 +484,7 @@ app.get('/ventas', async (req, res) => {
 app.get('/productos', async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT id, sku, nombre, descripcion, precio_venta, cantidad
+      SELECT id, sku, nombre, precio_venta, cantidad
       FROM producto
     `);
     res.status(200).json({ message: 'Productos obtenidos correctamente', data: result.rows });
@@ -767,5 +770,21 @@ app.get('/productos/bodega/:bodegaId', async (req, res) => {
   } catch (error) {
     console.error('Error al obtener productos de la bodega:', error);
     res.status(500).json({ message: 'Error al obtener productos de la bodega', error });
+  }
+});
+
+app.get('/transferencias-mes', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT COUNT(*) AS count
+      FROM venta
+      WHERE metodo_pago = 'Transferencia'
+        AND DATE_PART('month', fecha_creacion) = DATE_PART('month', CURRENT_DATE)
+        AND DATE_PART('year', fecha_creacion) = DATE_PART('year', CURRENT_DATE)
+    `);
+    res.status(200).json({ count: parseInt(result.rows[0].count) });
+  } catch (error) {
+    console.error('Error al contar transferencias del mes:', error);
+    res.status(500).json({ message: 'Error al contar transferencias del mes' });
   }
 });

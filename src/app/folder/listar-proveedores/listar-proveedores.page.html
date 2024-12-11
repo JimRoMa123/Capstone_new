@@ -103,6 +103,17 @@
           </ion-textarea>
         </ion-item>
 
+        <!-- Dentro del ion-modal de Orden de Compra -->
+<ion-item lines="full">
+  <ion-label position="stacked">Bodega de Entrega</ion-label>
+  <ion-select [(ngModel)]="bodegaSeleccionadaId" interface="action-sheet">
+    <ion-select-option *ngFor="let bodega of bodegas" [value]="bodega.id">
+      {{ bodega.nombre }}
+    </ion-select-option>
+  </ion-select>
+</ion-item>
+
+
         <ion-item lines="full">
           <ion-label position="stacked">Total</ion-label>
           <ion-input [(ngModel)]="total" type="number" disabled></ion-input>

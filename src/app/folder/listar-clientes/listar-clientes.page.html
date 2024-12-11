@@ -25,13 +25,13 @@
       </ion-label>
       <ion-buttons class="botones-en-columna">
         <div>
-          <ion-button expand="block" class="boton-hacer-pedido" (click)="abrirModal(cliente)">
+          <ion-button expand="block" color="success" (click)="abrirModal(cliente)">
             <ion-icon slot="start" name="cart-outline"></ion-icon>
             Realizar Venta
           </ion-button>
         </div>
         <div>
-          <ion-button expand="block" class="boton-editar" (click)="abrirEditarModal(cliente)">
+          <ion-button expand="block" color="primary" (click)="abrirEditarModal(cliente)">
             <ion-icon slot="start" name="create-outline"></ion-icon>
             Editar
           </ion-button>
@@ -51,14 +51,16 @@
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
-        <ion-content class="ion-padding">
+        <ion-content>
           <ion-item>
             <ion-label position="stacked">Cliente</ion-label>
+            <br>
             <ion-input [value]="clienteSeleccionado?.nombre" readonly></ion-input>
           </ion-item>
         
           <ion-item>
             <ion-label position="stacked">Método de Pago</ion-label>
+            <br>
             <ion-select [(ngModel)]="metodoPago">
               <ion-select-option value="Efectivo">Efectivo</ion-select-option>
               <ion-select-option value="Tarjeta">Tarjeta</ion-select-option>
@@ -68,6 +70,7 @@
         
           <ion-item>
             <ion-label position="stacked">Estado</ion-label>
+            <br>
             <ion-select [(ngModel)]="estado">
               <ion-select-option value="Pendiente">Pendiente</ion-select-option>
               <ion-select-option value="Pagado">Pagado</ion-select-option>
@@ -77,6 +80,7 @@
           <!-- Seleccionador de productos -->
           <ion-item>
             <ion-label position="stacked">Seleccionar Producto</ion-label>
+            <br>
             <ion-select (ionChange)="agregarProductoSeleccionado($event.detail.value)">
               <ion-select-option *ngFor="let producto of productos" [value]="producto">
                 {{ producto.nombre }} - {{ producto.precio_venta | currency }}
@@ -88,7 +92,7 @@
           <ion-list class="productos-seleccionados">
             <ion-item *ngFor="let producto of productosSeleccionados">
               <ion-label>
-                <h2>{{ producto.nombre }}</h2>
+                <h1>{{ producto.nombre }}</h1>
                 <p>Precio: {{ producto.precio_venta | currency }}</p>
           
                 <!-- Contenedor alineado para Cantidad -->
@@ -116,7 +120,11 @@
           
               <ion-button color="danger" (click)="eliminarProductoSeleccionado(producto.id)">Eliminar</ion-button>
             </ion-item>
+          
+            <!-- Separador -->
+            <ion-item-divider></ion-item-divider>
           </ion-list>
+          
           
         
           <!-- Mostrar el total calculado y la cantidad de productos -->

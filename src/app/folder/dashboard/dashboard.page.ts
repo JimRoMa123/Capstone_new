@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 
 import { HttpClient } from '@angular/common/http';
 @Component({
@@ -13,10 +14,12 @@ export class DashboardPage implements OnInit {
   pedidosRecientes: any[] = [];
   totalProveedores: number = 0;
   topClientes: any[] = [];
+  transferenciasCount: number = 0;
+  transferenciasProgress: number = 0;
   proveedorEstrella: any = { nombre: '', total_ventas: 0 };
   isLoading: boolean = true;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private alertController: AlertController) {}
 
   ngOnInit() {
     this.cargarDatos();
@@ -46,6 +49,23 @@ export class DashboardPage implements OnInit {
         console.error('Error al obtener total de proveedores:', error);
       }
     );
+
+    this.http.get<{ count: number }>('http://localhost:3000/transferencias-mes').subscribe(
+      (response) => {
+        this.transferenciasCount = response.count;
+        this.transferenciasProgress = Math.min((this.transferenciasCount / 50) * 100, 100);
+
+        // Mostrar alerta si las transferencias están entre 40 y 50
+        if (this.transferenciasCount >= 40 && this.transferenciasCount <= 50) {
+          this.mostrarAlertaTransferencias();
+        }
+      },
+      (error) => {
+        console.error('Error al obtener transferencias del mes:', error);
+      }
+    );
+
+    
 
     this.http.get<any[]>('http://localhost:3000/top-clientes').subscribe(
       (response) => {
@@ -77,6 +97,15 @@ export class DashboardPage implements OnInit {
     );
   }
 
+
+  async mostrarAlertaTransferencias() {
+    const alert = await this.alertController.create({
+      header: 'Alerta',
+      message: `El número de transferencias está en un rango alto (${this.transferenciasCount}).`,
+      buttons: ['OK'],
+    });
+    await alert.present();
+  }
   dibujarGrafico() {
     const canvas = document.getElementById('ventasSemanalesChart') as HTMLCanvasElement;
     if (!canvas) return;

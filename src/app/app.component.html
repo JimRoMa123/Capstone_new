@@ -2,43 +2,88 @@
   <ion-split-pane contentId="main-content">
     <ion-menu contentId="main-content" type="overlay">
       <ion-content>
-        <ion-list id="inbox-list">
+        <ion-list id="menu-list">
           <ion-list-header>Bienvenido</ion-list-header>
-          <ion-note *ngIf="user">Hola  {{user.email}}</ion-note>
+          <ion-note *ngIf="user">Hola, {{ user.email }}</ion-note>
 
-        
+          <!-- Dashboard -->
+          <ion-menu-toggle auto-hide="false">
+            <ion-item
+              routerDirection="root"
+              [routerLink]="[dashboardPage.url]"
+              lines="none"
+              detail="false"
+              routerLinkActive="selected"
+            >
+              <ion-icon slot="start" [name]="dashboardPage.icon"></ion-icon>
+              <ion-label>{{ dashboardPage.title }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <!-- Menú de Productos -->
+          <ion-item button (click)="toggleProductMenu()" lines="none">
+            <ion-icon slot="start" name="pricetag"></ion-icon>
+            <ion-label>Productos</ion-label>
+            <ion-icon slot="end" [name]="showProductMenu ? 'chevron-up' : 'chevron-down'"></ion-icon>
+          </ion-item>
+          <div [ngClass]="{'expanded': showProductMenu, 'collapsed': !showProductMenu}" class="expandable-content">
+            <ion-menu-toggle auto-hide="false" *ngFor="let p of productPages">
+              <ion-item
+                routerDirection="root"
+                [routerLink]="[p.url]"
+                lines="none"
+                detail="false"
+                routerLinkActive="selected"
+              >
+                <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                <ion-label>{{ p.title }}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </div>
+
+          <!-- Menú de Proveedores -->
           <ion-item button (click)="toggleProviderMenu()" lines="none">
             <ion-icon slot="start" name="business"></ion-icon>
             <ion-label>Proveedores</ion-label>
             <ion-icon slot="end" [name]="showProviderMenu ? 'chevron-up' : 'chevron-down'"></ion-icon>
           </ion-item>
-
           <div [ngClass]="{'expanded': showProviderMenu, 'collapsed': !showProviderMenu}" class="expandable-content">
             <ion-menu-toggle auto-hide="false" *ngFor="let p of providerPages">
-              <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-                <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+              <ion-item
+                routerDirection="root"
+                [routerLink]="[p.url]"
+                lines="none"
+                detail="false"
+                routerLinkActive="selected"
+              >
+                <ion-icon slot="start" [name]="p.icon"></ion-icon>
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
             </ion-menu-toggle>
           </div>
 
-         
+          <!-- Menú de Clientes -->
           <ion-item button (click)="toggleClientMenu()" lines="none">
             <ion-icon slot="start" name="people"></ion-icon>
             <ion-label>Clientes</ion-label>
             <ion-icon slot="end" [name]="showClientMenu ? 'chevron-up' : 'chevron-down'"></ion-icon>
           </ion-item>
-
-          <!-- Contenedor del Submenú de Clientes -->
           <div [ngClass]="{'expanded': showClientMenu, 'collapsed': !showClientMenu}" class="expandable-content">
             <ion-menu-toggle auto-hide="false" *ngFor="let p of clientPages">
-              <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-                <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+              <ion-item
+                routerDirection="root"
+                [routerLink]="[p.url]"
+                lines="none"
+                detail="false"
+                routerLinkActive="selected"
+              >
+                <ion-icon slot="start" [name]="p.icon"></ion-icon>
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
             </ion-menu-toggle>
           </div>
 
+          <!-- Menú de Bodegas -->
           <ion-item button (click)="toggleBodegaMenu()" lines="none">
             <ion-icon slot="start" name="home"></ion-icon>
             <ion-label>Bodegas</ion-label>
@@ -46,22 +91,27 @@
           </ion-item>
           <div [ngClass]="{'expanded': showBodegaMenu, 'collapsed': !showBodegaMenu}" class="expandable-content">
             <ion-menu-toggle auto-hide="false" *ngFor="let b of bodegaPages">
-              <ion-item routerDirection="root" [routerLink]="[b.url]" lines="none" detail="false" routerLinkActive="selected">
+              <ion-item
+                routerDirection="root"
+                [routerLink]="[b.url]"
+                lines="none"
+                detail="false"
+                routerLinkActive="selected"
+              >
                 <ion-icon slot="start" [name]="b.icon"></ion-icon>
                 <ion-label>{{ b.title }}</ion-label>
               </ion-item>
             </ion-menu-toggle>
           </div>
         </ion-list>
-      
-        <ion-footer class="logout-footer">
+
+        <!-- Cerrar sesión -->
+        <ion-footer>
           <ion-item (click)="logout()" lines="none" detail="false" class="logout-item">
             <ion-icon name="log-out-outline" slot="start"></ion-icon>
             <ion-label>Cerrar Sesión</ion-label>
           </ion-item>
         </ion-footer>
-        
-       
       </ion-content>
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>

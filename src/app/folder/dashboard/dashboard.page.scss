@@ -1,93 +1,44 @@
-/* General */
-ion-content {
-    --background: linear-gradient(to bottom, #f0f4f8, #ffffff);
-  }
-  
-  /* Títulos del Header */
-  ion-header ion-toolbar {
-    --background: linear-gradient(to right, #3f51b5, #1e88e5);
-    --color: #ffffff;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 1.4rem;
-    letter-spacing: 1px;
-  }
-  
-  /* Tarjetas */
-  ion-card {
-    --border-radius: 16px;
-    --background: #ffffff;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  
-  ion-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Títulos de las Tarjetas */
-  ion-card-header {
-    background: linear-gradient(to right, #3949ab, #1e88e5);
-    color: #ffffff;
-    font-weight: bold;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 12px;
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
-  }
-  
-  ion-card-title {
-    font-size: 1.1rem;
-    margin: 0;
-  }
-  
-  /* Contenido de las Tarjetas */
-  ion-card-content {
-    text-align: center;
-  }
-  
-  ion-card-content h2 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 8px 0;
-    color: #3f51b5;
-  }
-  
-  ion-card-content p {
-    font-size: 0.9rem;
-    color: #757575;
-  }
-  
-  /* Lista dentro de las tarjetas */
-  ion-card-content ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  ion-card-content ul li {
-    font-size: 0.9rem;
-    color: #333;
-    margin: 8px 0;
-  }
-  
-  /* Gráficos */
-  canvas {
-    margin: auto;
-    display: block;
-  }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    ion-card-content h2 {
-      font-size: 1.5rem;
-    }
-  
-    ion-card-title {
-      font-size: 0.9rem;
-    }
-  }
-  
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* centra las tarjetas horizontalmente */
+  padding: 20px;
+}
+
+.info-card {
+  width: 90%; /* Ajusta el ancho según tu preferencia */
+  max-width: 500px; /* Máximo ancho para pantallas grandes */
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 12px;
+}
+
+.number-highlight {
+  font-size: 3rem;
+  margin: 0;
+  color: var(--ion-color-primary);
+  font-weight: bold;
+}
+
+.progress-container {
+  background: var(--ion-color-light-shade);
+  border-radius: 10px;
+  width: 100%;
+  height: 20px;
+  overflow: hidden;
+  margin-top: 10px;
+  position: relative;
+}
+
+.progress-bar {
+  background: var(--ion-color-primary);
+  height: 100%;
+  transition: width 0.5s;
+}
+
+.progress-text {
+  margin-top: 8px;
+  font-weight: bold;
+  text-align: center;
+  color: var(--ion-color-medium);
+}

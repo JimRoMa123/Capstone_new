@@ -19,6 +19,10 @@ export class CrearProductoPage implements OnInit {
   selectedProveedorName = '';
   selectedCategoriaName = '';
   calculatedPrecioVenta = 0;
+  bodegas: any[] = [];
+  isBodegaModalOpen = false;
+  selectedBodegaName = '';
+
 
   constructor(
     private fb: FormBuilder,
@@ -39,14 +43,40 @@ export class CrearProductoPage implements OnInit {
       cantidad: [null, [Validators.required, Validators.min(1)]],
       porc_ganancias: [null, [Validators.required, Validators.min(0)]],
       precio_compra: [null, [Validators.required, Validators.min(0.01)]],
-      fecha_creacion: [currentDate, Validators.required], // Fecha de creación inicializada automáticamente
+      bodega_id: ['', Validators.required], // Campo para bodega
+      fecha_creacion: [currentDate, Validators.required],
     });
+    
   }
 
   ngOnInit() {
     this.loadProveedores();
     this.loadCategorias();
+    this.loadBodegas(); // Nueva función para cargar bodegas
   }
+  
+  loadBodegas() {
+    this.http.get('http://localhost:3000/bodegas').subscribe(
+      (data: any) => (this.bodegas = data.data),
+      (error) => console.error('Error al cargar bodegas:', error)
+    );
+  }
+
+  openBodegaModal() {
+    this.isBodegaModalOpen = true;
+  }
+  
+  closeBodegaModal() {
+    this.isBodegaModalOpen = false;
+  }
+  
+  selectBodega(bodega: any) {
+    this.productForm.patchValue({ bodega_id: bodega.id });
+    this.selectedBodegaName = bodega.nombre;
+    this.closeBodegaModal();
+  }
+  
+  
 
   loadProveedores() {
     this.proveedorService.getProveedoresData().subscribe(

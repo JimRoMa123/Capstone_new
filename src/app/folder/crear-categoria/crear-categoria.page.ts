@@ -11,7 +11,6 @@ export class CrearCategoriaPage implements OnInit {
 
   nombre: string = '';
   descripcion: string = '';
-  img: string = '';
   fechaCreacion: Date = new Date();
 
 
@@ -26,7 +25,6 @@ export class CrearCategoriaPage implements OnInit {
     const categoriaData = {
       nombre: this.nombre,
       descripcion: this.descripcion,
-      img: this.img,
       fecha_creacion: this.fechaCreacion,
     };
 
@@ -39,7 +37,6 @@ export class CrearCategoriaPage implements OnInit {
         });
         this.nombre = '';
         this.descripcion = '';
-        this.img = '';
         await alert.present();
       },
       async (error) => {
