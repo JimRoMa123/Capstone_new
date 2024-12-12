@@ -188,9 +188,14 @@
           <ion-input [(ngModel)]="proveedorSeleccionado.telefono"></ion-input>
         </ion-item>
         <ion-item>
+
           <ion-label position="floating">Email</ion-label>
           <ion-input [(ngModel)]="proveedorSeleccionado.email"></ion-input>
         </ion-item>
+
+        <ion-button expand="block" color="tertiary" (click)="obtenerUbicacion()">
+          Obtener Lat/Long de la dirección
+        </ion-button>
         <ion-item>
           <ion-label position="floating">Latitud</ion-label>
           <ion-input [(ngModel)]="proveedorSeleccionado.latitud" type="number"></ion-input>

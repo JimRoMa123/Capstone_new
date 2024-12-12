@@ -141,4 +141,25 @@ export class DashboardPage implements OnInit {
       ctx.fillText(`S${index + 1}`, x + 15, canvas.height - 10);
     });
   }
+  descargarReporte() {
+    // Llamar al endpoint que genera el PDF
+    this.http.get('http://localhost:3000/reporte-mensual', { responseType: 'blob' }).subscribe(
+      (blob: Blob) => {
+        // Crear una URL temporal para el blob
+        const url = window.URL.createObjectURL(blob);
+
+        // Crear un enlace invisible para forzar la descarga
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'reporte_mensual.pdf';
+        a.click();
+
+        // Liberar la URL temporal
+        window.URL.revokeObjectURL(url);
+      },
+      (error) => {
+        console.error('Error al descargar el reporte:', error);
+      }
+    );
+  }
 }

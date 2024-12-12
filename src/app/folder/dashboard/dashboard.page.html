@@ -10,7 +10,7 @@
 <ion-content style="background: var(--ion-color-light);">
   <div class="container">
     <!-- Tarjeta: Total Ventas del Mes -->
-    <ion-card class="info-card" button="true" routerLink="/detalle-ventas">
+    <ion-card class="info-card" button="true" routerLink="../listar-ventas">
       <ion-card-header>
         <ion-card-title>
           <ion-icon name="stats-chart-outline" style="margin-right: 8px;"></ion-icon>
@@ -24,7 +24,7 @@
     </ion-card>
 
     <!-- Tarjeta: Total Proveedores -->
-    <ion-card class="info-card" button="true" routerLink="/proveedores">
+    <ion-card class="info-card" button="true" routerLink="../listar-proveedores">
       <ion-card-header>
         <ion-card-title>
           <ion-icon name="people-circle-outline" style="margin-right: 8px;"></ion-icon>
@@ -38,7 +38,7 @@
     </ion-card>
 
     <!-- Tarjeta: Proveedor Estrella -->
-    <ion-card class="info-card" button="true" [routerLink]="['/detalle-proveedor', proveedorEstrella.id]">
+    <ion-card class="info-card" button="true">
       <ion-card-header>
         <ion-card-title>
           <ion-icon name="ribbon-outline" style="margin-right: 8px;"></ion-icon>
@@ -52,7 +52,7 @@
     </ion-card>
 
     <!-- Tarjeta: Clientes con más Compras -->
-    <ion-card class="info-card" button="true" routerLink="/clientes">
+    <ion-card class="info-card" button="true" >
       <ion-card-header>
         <ion-card-title>
           <ion-icon name="star-outline" style="margin-right: 8px;"></ion-icon>
@@ -69,9 +69,12 @@
         </ion-list>
       </ion-card-content>
     </ion-card>
-
+    <ion-button expand="block" color="tertiary" (click)="descargarReporte()">
+      <ion-icon name="download-outline" slot="start"></ion-icon>
+      Descargar Reporte
+    </ion-button>
     <!-- Tarjeta: Ventas Semanales -->
-    <ion-card class="info-card" button="true" routerLink="/reportes-semanales">
+    <ion-card class="info-card" button="true">
       <ion-card-header>
         <ion-card-title>
           <ion-icon name="bar-chart-outline" style="margin-right: 8px;"></ion-icon>
@@ -87,7 +90,7 @@
     </ion-card>
 
     <!-- Tarjeta: Progreso de Transferencias -->
-    <ion-card class="info-card" button="true" routerLink="/transferencias">
+    <ion-card class="info-card" button="true">
       <ion-card-header>
         <ion-card-title>
           <ion-icon name="trending-up-outline" style="margin-right: 8px;"></ion-icon>

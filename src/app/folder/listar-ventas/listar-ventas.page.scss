@@ -1,113 +1,14 @@
-.loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .no-ventas {
-    text-align: center;
-    margin-top: 20px;
-    color: gray;
-  }
-  /* Centrado general */
-ion-content {
-    --background: #f8f9fa; /* Fondo claro */
-    text-align: center;
-  }
-  
-  /* Títulos y etiquetas */
-  h2, h3, p {
-    margin: 0.5rem 0;
-  }
-  
-  h2 {
-    font-size: 1.5rem;
-    color: #343a40; /* Tono oscuro */
-  }
-  
-  h3 {
-    font-size: 1.25rem;
-    color: #495057; /* Tono intermedio */
-  }
-  
-  p {
-    color: #6c757d; /* Tono claro */
-  }
-  
-  /* Lista de ventas */
-  .ventas-lista {
-    margin: 1rem auto;
-    padding: 1rem;
-    border-radius: 10px;
-    background-color: white;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Modal */
-  .detalle-modal {
-    --background: #ffffff;
-    --box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 15px;
-  }
-  
-  /* Botones */
-  ion-button {
-    --border-radius: 10px;
-    margin: 1rem auto;
-    padding: 0.5rem 1rem;
-  }
-  
+.venta-completada {
+  --background: #d4edda; /* Verde claro */
+  --color: #155724; /* Texto más oscuro */
+}
 
-  
-  ion-item {
-    text-align: left;
-    margin: 0.5rem 0;
-  }
-  
-  .botones-en-columna {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px; /* Espacio entre los botones */
-    margin-top: 10px;
-  }
-  
-  .boton-hacer-pedido,
-  .boton-editar {
-    --background: var(--ion-color-primary);
-    --color: white;
-    --border-radius: 8px; /* Bordes más suaves */
-    --padding: 10px 20px; /* Ajusta el relleno */
-    font-weight: bold;
-    font-size: 14px; /* Asegúrate de que el texto sea claro */
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .boton-hacer-pedido {
-    --background: #4caf50; /* Verde */
-  }
-  
-  .boton-editar {
-    --background: #3f51b5; /* Azul */
-  }
-  
-  /* Animación hover */
-  .boton-hacer-pedido:hover,
-  .boton-editar:hover {
-    transform: scale(1.02); /* Un pequeño zoom */
-    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Texto en los botones */
-  .boton-hacer-pedido ion-icon,
-  .boton-editar ion-icon {
-    font-size: 18px;
-    margin-right: 8px; /* Espacio entre el ícono y el texto */
-  }
-  
+.venta-pendiente {
+  --background: #fff3cd; /* Amarillo claro */
+  --color: #856404;
+}
+
+.venta-eliminada {
+  --background: #f8d7da; /* Rojo claro */
+  --color: #721c24;
+}

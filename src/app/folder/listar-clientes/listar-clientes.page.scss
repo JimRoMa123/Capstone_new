@@ -94,14 +94,7 @@ ion-item {
 
 /* Inputs */
 ion-input,
-ion-select {
-  --padding-start: 8px;
-  --padding-end: 8px;
-  --background: #f9f9f9; /* Fondo claro */
-  border: 1px solid #ccc; /* Borde gris */
-  border-radius: 6px;
-  height: 40px;
-}
+
 
 /* Productos seleccionados */
 .productos-seleccionados ion-item {
@@ -227,13 +220,7 @@ ion-label {
   margin-bottom: 8px;
 }
 
-ion-input, ion-select {
-  --background: #f9f9f9; /* Fondo claro */
-  border: 1px solid #ccc; /* Borde gris */
-  border-radius: 6px;
-  height: 40px; /* Altura uniforme */
-  padding: 8px; /* Espaciado interno */
-}
+
 
 /* Inline fields (Cantidad y Descuento) */
 .inline-field {

@@ -8,15 +8,38 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <!-- Barra de búsqueda por nombre de cliente -->
+
+  <!-- Segmento para filtrar por estado -->
+  <ion-segment (ionChange)="cambiarFiltro($event)" value="completada" style="margin-bottom: 16px;">
+    <ion-segment-button value="Completada">
+      <ion-label>Completadas</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="Pendiente">
+      <ion-label>Pendientes</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="Eliminada">
+      <ion-label>Eliminadas</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-searchbar placeholder="Buscar por cliente" (ionInput)="buscarCliente($event)"></ion-searchbar>
+
+
   <!-- Indicador de carga -->
   <div *ngIf="isLoading" class="loading-container" style="text-align: center;">
     <ion-spinner name="crescent"></ion-spinner>
     <p style="font-size: 1.25rem; color: #6c757d;">Cargando ventas...</p>
   </div>
 
-  <!-- Lista de ventas -->
-  <ion-list *ngIf="!isLoading && ventas.length > 0" class="ventas-lista">
-    <ion-item *ngFor="let venta of ventas" (click)="abrirDetalleVenta(venta)" detail>
+  <!-- Lista de ventas filtradas -->
+  <ion-list *ngIf="!isLoading && ventasFiltradas.length > 0" class="ventas-lista">
+    <ion-item *ngFor="let venta of ventasFiltradas" (click)="abrirDetalleVenta(venta)" detail
+      [ngClass]="{
+        'venta-completada': venta.estado === 'Completada',
+        'venta-pendiente': venta.estado === 'Pendiente',
+        'venta-eliminada': venta.estado === 'Eliminada'
+      }"
+    >
       <ion-label>
         <h2>Cliente: {{ venta.cliente_nombre }} {{ venta.cliente_apellido }}</h2>
         <p>Fecha: {{ venta.fecha_creacion | date: 'short' }}</p>
@@ -27,9 +50,9 @@
     </ion-item>
   </ion-list>
 
-  <!-- Mensaje si no hay ventas -->
-  <div *ngIf="!isLoading && ventas.length === 0" class="no-ventas">
-    <ion-label>No hay ventas registradas para este mes.</ion-label>
+  <!-- Mensaje si no hay ventas para el estado seleccionado -->
+  <div *ngIf="!isLoading && ventasFiltradas.length === 0" class="no-ventas">
+    <ion-label>No hay ventas con el estado "{{filtro}}" registradas para este mes.</ion-label>
   </div>
 
   <!-- Modal para detalle de venta -->
@@ -61,7 +84,54 @@
               </ion-label>
             </ion-item>
           </ion-list>
+
+          <!-- Botón para cambiar estado -->
+          <ion-button (click)="abrirCambiarEstadoModal()" color="secondary" expand="block" style="margin-top:16px;">
+            Cambiar estado de venta
+          </ion-button>
         </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Modal para cambiar estado -->
+  <ion-modal [isOpen]="isCambiarEstadoModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Cambiar Estado</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="cerrarCambiarEstadoModal()">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list>
+          <ion-radio-group [(ngModel)]="nuevoEstadoVenta">
+            <ion-list-header>
+              <ion-label>Selecciona el nuevo estado</ion-label>
+            </ion-list-header>
+
+            <ion-item>
+              <ion-label>Completada</ion-label>
+              <ion-radio slot="start" value="Completada"></ion-radio>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>Pendiente</ion-label>
+              <ion-radio slot="start" value="Pendiente"></ion-radio>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>Eliminada</ion-label>
+              <ion-radio slot="start" value="Eliminada"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
+
+        <ion-button (click)="guardarNuevoEstado()" color="success" expand="block" style="margin-top:16px;">
+          Guardar
+        </ion-button>
       </ion-content>
     </ng-template>
   </ion-modal>

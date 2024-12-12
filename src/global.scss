@@ -35,3 +35,305 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+
+/* General */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  ion-content {
+    --background: #f4f4f9;
+    display: flex;
+    flex-direction: flex;
+    justify-content: flex;
+    align-items: flex;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  
+  /* Lista de clientes */
+  ion-list {
+    margin-top: 16px;
+  }
+  
+  ion-item {
+    --background: #ffffff; /* Fondo blanco */
+    border: 1px solid #e0e0e0; /* Borde claro */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    margin-bottom: 12px; /* Espaciado entre elementos */
+    padding: 12px;
+  }
+  
+  ion-item-divider {
+    margin: 16px 0;
+    background-color: #e0e0e0; /* Color del separador */
+    height: 1px;
+    width: 100%;
+  }
+  
+  /* Encabezados y etiquetas */
+  ion-label h2 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+  }
+  
+  ion-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    display: block; /* Asegura que las etiquetas sean bloques */
+  }
+  
+  /* Botones en columna */
+  .botones-en-columna {
+    display: flex;
+    flex-direction: column; /* Organiza los botones verticalmente */
+    gap: 8px; /* Espacio entre los botones */
+    align-items: flex-start; /* Alinea los botones a la izquierda */
+  }
+  
+  .boton-hacer-pedido,
+  .boton-editar {
+    font-size: 14px;
+    width: 100%; /* Los botones ocupan todo el ancho del contenedor */
+  }
+  
+  .boton-hacer-pedido {
+    --background: #5cb85c;
+    --background-activated: #4cae4c;
+  }
+  
+  .boton-editar {
+    --background: #0275d8;
+    --background-activated: #025aa5;
+  }
+  
+  /* Modal */
+  ion-modal {
+    --background: #ffffff; /* Fondo blanco para el modal */
+    border-radius: 12px;
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2); /* Sombra para el modal */
+  }
+  
+  
+  
+  
+  /* Formulario dentro del modal */
+
+  
+  
+  /* Productos seleccionados */
+  .productos-seleccionados ion-item {
+    margin-bottom: 16px; /* Espaciado entre productos */
+    padding: 16px;
+    border-radius: 8px; /* Bordes redondeados */
+    background-color: #ffffff; /* Fondo blanco */
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  }
+  
+  /* Campos inline (Cantidad y Descuento) */
+  .inline-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 8px 0;
+  }
+  
+  .inline-field label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .inline-field ion-input {
+    flex: 1;
+    margin-left: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    --background: #f9f9f9;
+  }
+  
+  /* Totales */
+
+  
+  /* Botón de Confirmar Venta */
+  ion-button.confirmar-venta {
+    --background: #5cb85c; /* Color verde */
+    --background-activated: #4cae4c;
+    color: #ffffff; /* Texto blanco */
+    font-size: 16px; /* Texto más grande */
+    font-weight: bold;
+    padding: 12px; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    margin-top: 16px; /* Espacio superior */
+    width: 100%; /* Ocupa todo el ancho */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
+  }
+  
+  /* Mensaje cuando no hay clientes */
+  .no-clientes ion-label {
+    font-size: 16px;
+    color: #999;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* Spinner de carga */
+  .loading-container {
+    margin-top: 50px;
+    text-align: center;
+    color: #666;
+  }
+  
+  .loading-container p {
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  
+  
+  /* General */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Modal */
+  ion-modal {
+    --background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2); /* Sombra para modal */
+  }
+  
+  
+  
+  
+  
+  /* Contenido del modal */
+  ion-content {
+    --background: #f4f4f9; /* Fondo claro */
+    display: flex;
+    flex-direction: column; /* Organiza elementos en columna */
+    gap: 16px; /* Espacio uniforme entre los elementos */
+    padding: 16px;
+  }
+  
+  /* Elementos dentro del formulario */
+  ion-item {
+    --background: #ffffff;
+    border: 1px solid #e0e0e0; /* Borde claro */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    padding: 12px; /* Espaciado interno */
+  }
+  
+  /* Labels y campos de entrada */
+  ion-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  
+  
+  
+  /* Inline fields (Cantidad y Descuento) */
+  .inline-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 8px 0;
+  }
+  
+  .inline-field label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .inline-field ion-input {
+    flex: 1;
+    margin-left: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    --background: #f9f9f9;
+  }
+  
+  /* Totales */
+  .totales {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: #f9f9f9;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .totales p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+  }
+  
+  /* Botón de Confirmar Venta */
+  ion-button.confirmar-venta {
+    --background: #5cb85c; /* Color verde */
+    --background-activated: #4cae4c;
+    color: #ffffff; /* Texto blanco */
+    font-size: 16px; /* Texto más grande */
+    font-weight: bold;
+    padding: 12px; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    width: 100%; /* Ocupa todo el ancho */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
+    margin-top: 16px; /* Espacio superior */
+  }
+  
+  /* Botones dentro del formulario */
+  .botones {
+    display: flex;
+    flex-direction: column; /* Botones en columna */
+    gap: 12px; /* Espacio entre botones */
+  }
+  
+  .botones ion-button {
+    width: 100%; /* Botones ocupan el ancho completo */
+  }
+  
+  /* Spinner de carga */
+  .loading-container {
+    text-align: center;
+    margin-top: 50px;
+    color: #666;
+  }
+  
+  .loading-container p {
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  
+  /* Mensaje cuando no hay clientes */
+  .no-clientes ion-label {
+    font-size: 16px;
+    color: #999;
+    text-align: center;
+    margin-top: 20px;
+  }
+  

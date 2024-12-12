@@ -1,11 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
-const cors = require('cors'); // Importa el paquete CORS
+const cors = require('cors');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-
+const PDFDocument = require('pdfkit'); // Importar pdfkit
 
 const app = express();
 const port = 3000;
@@ -13,22 +13,23 @@ app.use(cors());
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
   next();
 });
 
 const pool = new Pool({
-  user: 'postgres', // Usuario de la base de datos
+  user: 'postgres',
   host: 'erp-pyme.postgres.database.azure.com',
-  database: 'postgres', 
-  password: 'capstonePyme321/', 
-  port: 5432, 
+  database: 'postgres',
+  password: 'capstonePyme321/',
+  port: 5432,
   ssl: {
-      rejectUnauthorized: false 
-  }
+    rejectUnauthorized: false,
+  },
 });
-
-
 
 app.use(bodyParser.json());
 
@@ -786,5 +787,275 @@ app.get('/transferencias-mes', async (req, res) => {
   } catch (error) {
     console.error('Error al contar transferencias del mes:', error);
     res.status(500).json({ message: 'Error al contar transferencias del mes' });
+  }
+});
+
+// Ejemplo en Node.js/Express
+// Ruta: PATCH /ventas/:id
+app.patch('/ventas/:id', async (req, res) => {
+  const { id } = req.params;
+  const { estado } = req.body; // Estado nuevo de la venta
+  if (!['Completada', 'Pendiente', 'Eliminada'].includes(estado)) {
+    return res.status(400).json({ message: 'Estado inválido' } );
+  }
+
+  try {
+    // Actualizar la venta en la base de datos
+    await pool.query(
+      'UPDATE venta SET estado = $1 WHERE id = $2',
+      [estado, id]
+    );
+
+    return res.json({ message: 'Estado de venta actualizado correctamente' });
+  } catch (error) {
+    console.error('Error al actualizar estado de venta:', error);
+    return res.status(500).json({ message: 'Error interno del servidor' });
+  }
+});
+
+
+// Suponiendo que tienes instalado pdfmake: npm install pdfmake
+function fitText(doc, text, width) {
+  let truncated = text;
+  // Mientras el texto sea más ancho que la columna, quitar el último carácter
+  while (truncated.length > 0 && doc.widthOfString(truncated) > width) {
+    truncated = truncated.slice(0, -1);
+  }
+  return truncated;
+}
+
+
+app.get('/reporte-mensual', async (req, res) => {
+  try {
+    // Obtención de datos (igual que en tu ejemplo)
+    const comprasResult = await pool.query(`
+      SELECT prov.nombre AS proveedor, p.nombre AS producto, dp.precio_unitario, dp.fecha_creacion AS fecha
+      FROM detalle_pedido dp
+      JOIN producto p ON dp.producto_id = p.id
+      JOIN proveedor prov ON dp.proveedor_id = prov.id
+      WHERE DATE_PART('month', dp.fecha_creacion) = DATE_PART('month', CURRENT_DATE)
+        AND DATE_PART('year', dp.fecha_creacion) = DATE_PART('year', CURRENT_DATE)
+    `);
+
+    let totalCompras = 0;
+    const comprasData = comprasResult.rows.map((row) => {
+      totalCompras += parseFloat(row.precio_unitario);
+      return {
+        proveedor: row.proveedor,
+        producto: row.producto,
+        precio_unitario: row.precio_unitario.toString(),
+        fecha: new Date(row.fecha).toLocaleDateString(),
+      };
+    });
+
+    const ventasResult = await pool.query(`
+      SELECT v.id, c.nombre AS cliente_nombre, c.apellido AS cliente_apellido, v.fecha_creacion, v.estado, v.metodo_pago
+      FROM venta v
+      JOIN cliente c ON v.cliente_id = c.id
+      WHERE DATE_PART('month', v.fecha_creacion) = DATE_PART('month', CURRENT_DATE)
+        AND DATE_PART('year', v.fecha_creacion) = DATE_PART('year', CURRENT_DATE)
+    `);
+
+    let totalVentas = 0;
+    let ventasData = [];
+
+    for (const venta of ventasResult.rows) {
+      const detalle = await pool.query(`
+        SELECT p.nombre, dv.cantidad, dv.precio_unitario, dv.total_venta
+        FROM detalle_venta dv
+        JOIN producto p ON dv.producto_id = p.id
+        WHERE dv.venta_id = $1
+      `, [venta.id]);
+
+      detalle.rows.forEach((producto) => {
+        totalVentas += parseFloat(producto.total_venta);
+        ventasData.push({
+          cliente: `${venta.cliente_nombre} ${venta.cliente_apellido}`,
+          producto: producto.nombre,
+          cantidad: producto.cantidad.toString(),
+          precio_unit: producto.precio_unitario.toString(),
+          total_venta: producto.total_venta.toString(),
+          fecha: new Date(venta.fecha_creacion).toLocaleDateString(),
+        });
+      });
+    }
+
+    const proveedorEstrellaResp = await pool.query(`
+      SELECT p.nombre, COUNT(dv.id) AS total_ventas
+      FROM proveedor p
+      JOIN detalle_pedido dv ON dv.proveedor_id = p.id
+      GROUP BY p.id
+      ORDER BY total_ventas DESC
+      LIMIT 1
+    `);
+    const proveedorEstrella = proveedorEstrellaResp.rows[0];
+
+    const topClientesResp = await pool.query(`
+      SELECT c.nombre, c.apellido, COUNT(v.id) AS total_compras
+      FROM cliente c
+      JOIN venta v ON v.cliente_id = c.id
+      GROUP BY c.id
+      ORDER BY total_compras DESC
+      LIMIT 5
+    `);
+    const topClientes = topClientesResp.rows.map(
+      (tc) => `${tc.nombre} ${tc.apellido}: ${tc.total_compras} compras`
+    );
+
+    const totalVentasResp = await pool.query(`
+      SELECT COUNT(*)::int AS total_ventas_mes FROM venta
+      WHERE DATE_PART('month', fecha_creacion) = DATE_PART('month', CURRENT_DATE)
+        AND DATE_PART('year', fecha_creacion) = DATE_PART('year', CURRENT_DATE)
+    `);
+    const totalVentasMes = totalVentasResp.rows[0].total_ventas_mes;
+
+    const completadasResp = await pool.query(`
+      SELECT COUNT(*)::int AS completadas FROM venta
+      WHERE estado = 'completada'
+        AND DATE_PART('month', fecha_creacion) = DATE_PART('month', CURRENT_DATE)
+        AND DATE_PART('year', fecha_creacion) = DATE_PART('year', CURRENT_DATE)
+    `);
+    const completadasCount = completadasResp.rows[0].completadas;
+    const porcentajeCompletadas =
+      totalVentasMes > 0
+        ? ((completadasCount / totalVentasMes) * 100).toFixed(2) + '%'
+        : '0%';
+
+    // Crear documento PDF con pdfkit
+    const doc = new PDFDocument({ margin: 50 });
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename="reporte_mensual.pdf"');
+    doc.pipe(res);
+
+    // Estilos generales
+    doc.font('Helvetica');
+
+    // Título principal
+    doc.fontSize(20).text('Reporte Mensual', { align: 'center' });
+    doc.moveDown(2);
+
+    // Página 1: Compras
+    doc.font('Helvetica-Bold').fontSize(14).text('Página 1: Compras a Proveedores', { align: 'left' });
+    doc.moveDown(0.5);
+    // Línea roja
+    doc.moveTo(doc.x, doc.y)
+      .lineTo(doc.page.width - doc.page.margins.right, doc.y)
+      .strokeColor('red').lineWidth(2).stroke();
+    doc.moveDown(1);
+
+    // Tabla de Compras
+    doc.fontSize(12).font('Helvetica-Bold');
+    const startX = doc.x;
+    let currentY = doc.y;
+    const col1 = 120;
+    const col2 = 100;
+    const col3 = 100;
+    const col4 = 100;
+
+    doc.text('Proveedor', startX, currentY, { width: col1 });
+    doc.text('Item', startX + col1, currentY, { width: col2 });
+    doc.text('Costo U.', startX + col1 + col2, currentY, { width: col3 });
+    doc.text('Fecha', startX + col1 + col2 + col3, currentY, { width: col4 });
+
+    currentY += 20;
+    doc.moveTo(startX, currentY)
+      .lineTo(startX + col1 + col2 + col3 + col4, currentY)
+      .strokeColor('red').lineWidth(1).stroke();
+    currentY += 10;
+
+    doc.font('Helvetica').fontSize(12);
+    comprasData.forEach((c) => {
+      let prov = fitText(doc, c.proveedor, col1);
+      let prod = fitText(doc, c.producto, col2);
+      let precio = fitText(doc, c.precio_unitario, col3);
+      let fec = fitText(doc, c.fecha, col4);
+
+      doc.text(prov, startX, currentY, { width: col1, align:'justify', lineBreak:false });
+      doc.text(prod, startX + col1, currentY, { width: col2, align:'justify', lineBreak:false });
+      doc.text(precio, startX + col1 + col2, currentY, { width: col3, align:'justify', lineBreak:false });
+      doc.text(fec, startX + col1 + col2 + col3, currentY, { width: col4, align:'justify', lineBreak:false });
+      currentY += 20;
+    });
+
+    doc.moveTo(startX, currentY)
+      .lineTo(startX + col1 + col2 + col3 + col4, currentY)
+      .strokeColor('red').lineWidth(1).stroke();
+    doc.moveDown(1).text(`Total de Compras: ${totalCompras.toFixed(2)}`, { align:'justify' });
+
+    // Página 2: Ventas
+    doc.addPage();
+    doc.font('Helvetica-Bold').fontSize(14).text('Página 2: Ventas', { align:'left' });
+    doc.moveDown(0.5);
+    doc.moveTo(doc.x, doc.y)
+      .lineTo(doc.page.width - doc.page.margins.right, doc.y)
+      .strokeColor('red').lineWidth(2).stroke();
+    doc.moveDown(1);
+
+    // Cabecera Ventas
+    doc.font('Helvetica-Bold').fontSize(12);
+    const vStartX = doc.x;
+    let vCurrentY = doc.y;
+    const vCol = 80;
+
+    doc.text('Cliente', vStartX, vCurrentY, { width: vCol });
+    doc.text('Producto', vStartX+vCol, vCurrentY, { width: vCol });
+    doc.text('Cantidad', vStartX+vCol*2, vCurrentY, { width: vCol });
+    doc.text('P.Unit', vStartX+vCol*3, vCurrentY, { width: vCol });
+    doc.text('Total', vStartX+vCol*4, vCurrentY, { width: vCol });
+    doc.text('Fecha', vStartX+vCol*5, vCurrentY, { width: vCol });
+
+    vCurrentY += 20;
+    doc.moveTo(vStartX, vCurrentY)
+      .lineTo(vStartX+vCol*6, vCurrentY)
+      .strokeColor('red').lineWidth(1).stroke();
+    vCurrentY += 10;
+
+    doc.font('Helvetica').fontSize(12);
+    ventasData.forEach((v) => {
+      let cli = fitText(doc, v.cliente, vCol);
+      let prod = fitText(doc, v.producto, vCol);
+      let cant = fitText(doc, v.cantidad, vCol);
+      let punit = fitText(doc, v.precio_unit, vCol);
+      let tot = fitText(doc, v.total_venta, vCol);
+      let fec = fitText(doc, v.fecha, vCol);
+
+      doc.text(cli, vStartX, vCurrentY, { width: vCol, align:'justify', lineBreak:false });
+      doc.text(prod, vStartX+vCol, vCurrentY, { width: vCol, align:'justify', lineBreak:false });
+      doc.text(cant, vStartX+vCol*2, vCurrentY, { width: vCol, align:'justify', lineBreak:false });
+      doc.text(punit, vStartX+vCol*3, vCurrentY, { width: vCol, align:'justify', lineBreak:false });
+      doc.text(tot, vStartX+vCol*4, vCurrentY, { width: vCol, align:'justify', lineBreak:false });
+      doc.text(fec, vStartX+vCol*5, vCurrentY, { width: vCol, align:'justify', lineBreak:false });
+
+      vCurrentY += 20;
+    });
+
+    doc.moveDown(1).text(`Total de Ventas: ${totalVentas.toFixed(2)}`, { align:'justify' });
+
+    // Página 3: Estadísticas
+    doc.addPage();
+    doc.font('Helvetica-Bold').fontSize(14).text('Página 3: Estadísticas Globales', { align:'left' });
+    doc.moveDown(0.5);
+    doc.moveTo(doc.x, doc.y)
+      .lineTo(doc.page.width - doc.page.margins.right, doc.y)
+      .strokeColor('red').lineWidth(2).stroke();
+    doc.moveDown(1);
+
+    doc.font('Helvetica').fontSize(12);
+    let proveedorText = proveedorEstrella
+      ? `${proveedorEstrella.nombre} con ${proveedorEstrella.total_ventas} ventas`
+      : 'No disponible';
+    doc.text(`Proveedor Estrella: ${proveedorText}`, { align:'justify' });
+    doc.moveDown(1).text('Top Clientes:', { align:'justify' });
+
+    topClientes.forEach(tc => {
+      doc.text(tc, { align:'justify' });
+    });
+
+
+    doc.end();
+
+  } catch (error) {
+    console.error('Error al generar el reporte:', error);
+    res.status(500).json({ message: 'Error al generar el reporte' });
   }
 });

@@ -192,6 +192,43 @@ export class ListarProveedoresPage implements OnInit {
       0
     );
   }
+  obtenerUbicacion() {
+    // Construimos la dirección completa a geocodificar
+    // Incluimos direccion, comuna, provincia y región
+    const fullAddress = `${this.proveedorSeleccionado.direccion}, ${this.proveedorSeleccionado.comuna}, ${this.proveedorSeleccionado.provincia}, ${this.proveedorSeleccionado.region}`;
+    const query = encodeURIComponent(fullAddress);
+
+    const accessToken = 'pk.eyJ1IjoiamFpcm9kcmlndWV6bSIsImEiOiJjbTQwanp0ZTQwNnJxMm1wcjd5bzhxZnduIn0.iVDBeD4K6obl8DxvGVZQcg';
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${accessToken}`;
+
+    this.http.get(url).subscribe((response: any) => {
+      if (response.features && response.features.length > 0) {
+        // El centro (center) es un arreglo [longitud, latitud]
+        const [lng, lat] = response.features[0].center;
+        this.proveedorSeleccionado.latitud = lat.toString();
+        this.proveedorSeleccionado.longitud = lng.toString();
+
+        this.alertController.create({
+          header: 'Ubicación Obtenida',
+          message: `Latitud: ${this.latitud}, Longitud: ${this.longitud}`,
+          buttons: ['OK']
+        }).then(alert => alert.present());
+      } else {
+        this.alertController.create({
+          header: 'Error',
+          message: 'No se pudo obtener coordenadas para esa dirección.',
+          buttons: ['OK']
+        }).then(alert => alert.present());
+      }
+    }, error => {
+      console.error('Error en la geocodificación directa:', error);
+      this.alertController.create({
+        header: 'Error',
+        message: 'Hubo un problema al obtener las coordenadas.',
+        buttons: ['OK']
+      }).then(alert => alert.present());
+    });
+  }
 
   enviarPedido() {
     const productosSeleccionados = this.productosSeleccionados.map(producto => ({
@@ -209,7 +246,7 @@ export class ListarProveedoresPage implements OnInit {
     const pedido = {
       fecha_pedido: new Date(),
       total: this.total,
-      estado: 'en espera',
+      estado: 'En proceso',
       proveedor_id: this.proveedorSeleccionado.id,
       productos: productosSeleccionados,
       direccion_entrega_id: this.bodegaSeleccionadaId // Aquí enviamos la bodega seleccionada
