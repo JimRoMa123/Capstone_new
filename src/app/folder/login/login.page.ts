@@ -39,7 +39,7 @@ export class LoginPage {
       (response) => {
         if (response.token) {
           localStorage.setItem('auth_token', response.token);
-          this.router.navigate(['/folder/main-dashboard']); // Redirige al dashboard
+          this.router.navigate(['/folder/dashboard']); // Redirige al dashboard
           this.errorMessage = '';
         } else {
           this.errorMessage =

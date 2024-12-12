@@ -93,7 +93,7 @@ app.post('/login', async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT id FROM user_customuser WHERE username = $1',
+      'SELECT id, password FROM user_customuser WHERE username = $1',
       [username]
     );
 
@@ -133,6 +133,7 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ message: 'Error al iniciar sesión', error });
   }
 });
+
 
 
 
